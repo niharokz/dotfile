@@ -7,7 +7,7 @@
 #       ╚═╝░░╚══╝╚═╝╚═╝░░╚═╝╚═╝░░╚═╝╚═╝░░╚═╝░╚════╝░╚═╝░░╚═╝╚══════╝
 #
 #       DRAFTED BY NIHAR SAMANTARAY On 16-05-20. [https://nihars.com]
-#
+#       SOURCE [config] LAST MODIFIED ON 31-05-20
 
 # Set default keys
 set $browser brave
@@ -23,8 +23,8 @@ exec --no-startup-id xss-lock --transfer-sleep-lock -- i3lock --nofork
 exec --no-startup-id nm-applet
 
 # class                 border  backgr. text    indicator child_border
-client.focused          #FF4444 #FF5555 #80FFF9 #FDF6E3
-client.focused_inactive #000000 #000000 #AD69AF #454948
+client.focused          #35B264 #35B264 #80FFF9 #35B264
+client.focused_inactive #000000 #010D0B #AD69AF #454948
 client.unfocused        #000000 #000000 #AD69AF #454948
 client.urgent           #CB4B16 #FDF6E3 #AD69AF #268BD2
 client.placeholder      #000000 #0c0c0c #ffffff #000000 
@@ -52,8 +52,8 @@ bindsym KP_Multiply exec $editor
 bindsym $mod+x kill
 bindsym $mod+shift+q exec poweroff
 bindsym KP_Subtract kill
-bindsym $mod+d exec dmenu_run -nb '#000' -nf '#FFF' -sb '#F00' -sf '#FFF' -b
-bindsym Menu exec dmenu_run -nb '#000' -nf '#FFF' -sb '#F00' -sf '#FFF' -b
+bindsym $mod+d exec dmenu_run -nb '#000' -nf '#FFF' -sb '#A2DDBC' -sf '#000' -b
+bindsym Menu exec dmenu_run -nb '#000' -nf '#FFF' -sb '#A2DDBC' -sf '#000' -b
 bindsym Print exec spectacle
 
 bindsym $mod+j focus left
@@ -192,4 +192,6 @@ bindsym $mod+r mode "resize"
 exec_always --no-startup-id RR
 exec_always exec picom &
 exec_always --no-startup-id $HOME/.config/polybar/launch.sh
-exec_always feh --bg-scale /data/picture/System/Wallpaper/background.png
+exec_always feh --bg-scale /data/picture/system/wallpaper/greenpredator.jpg
+
+
