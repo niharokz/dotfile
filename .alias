@@ -19,5 +19,7 @@ alias tools='cd /data/workspace/tools'
 alias vi='vim'
 alias vih='/data/workspace/tools/header.sh'
 alias work='cd /data/workspace/'
+alias yt='youtube-dl'
+alias yta='yt -x -f bestaudio/best --add-metadata -o "%(title)s.%(ext)s"'
 
 alias note='cd /data/workspace/Dropbox/notes ; vih'
