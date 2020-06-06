@@ -1,13 +1,10 @@
-# 
-#       ███╗░░██╗██╗██╗░░██╗░█████╗░██████╗░░█████╗░██╗░░██╗███████╗
-#       ████╗░██║██║██║░░██║██╔══██╗██╔══██╗██╔══██╗██║░██╔╝╚════██║
-#       ██╔██╗██║██║███████║███████║██████╔╝██║░░██║█████═╝░░░███╔═╝
-#       ██║╚████║██║██╔══██║██╔══██║██╔══██╗██║░░██║██╔═██╗░██╔══╝░░
-#       ██║░╚███║██║██║░░██║██║░░██║██║░░██║╚█████╔╝██║░╚██╗███████╗
-#       ╚═╝░░╚══╝╚═╝╚═╝░░╚═╝╚═╝░░╚═╝╚═╝░░╚═╝░╚════╝░╚═╝░░╚═╝╚══════╝
 #
-#       DRAFTED BY NIHAR SAMANTARAY On 16-05-20. [https://nihars.com]
-#       SOURCE [.alias] LAST MODIFIED ON 17-05-20
+#		NAME		:	NIHAR SAMANTARAY
+#		WEBSITE		:	HTTPS://NIHARS.COM
+#		SOURCE		:	.alias
+#		CREATED ON	:	16-05-20
+#		MODIFIED ON	:	06-06-20
+#
 
 alias downloads='cd /data/download'
 alias dot='/usr/bin/git --git-dir=/data/workspace/dotfile --work-tree=$HOME'
@@ -23,3 +20,4 @@ alias yt='youtube-dl'
 alias yta='yt -x -f bestaudio/best --add-metadata -o "%(title)s.%(ext)s"'
 
 alias note='cd /data/workspace/Dropbox/notes ; vih'
+
