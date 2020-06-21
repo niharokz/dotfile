@@ -3,7 +3,7 @@
 #		WEBSITE		:	HTTPS://NIHARS.COM
 #		SOURCE		:	config
 #		CREATED ON	:	14-05-20
-#		MODIFIED ON	:	14-06-20
+#		MODIFIED ON	:	21-06-20
 
 # Set default keys
 set $browser vivaldi-stable
@@ -48,6 +48,7 @@ bindsym KP_Multiply exec $editor
 bindsym $mod+x kill
 bindsym $mod+shift+q exec poweroff
 bindsym KP_Subtract kill
+bindsym KP_Delete exec zathura /data/document/read/*
 bindsym $mod+d exec dmenu_run -nb '#000' -nf '#FFF' -sb '#A2DDBC' -sf '#000' -b
 bindsym Menu exec dmenu_run -nb '#000' -nf '#FFF' -sb '#A2DDBC' -sf '#000' -b
 bindsym Print exec spectacle
@@ -186,9 +187,19 @@ bindsym $mod+r mode "resize"
 # finds out, if available)
 
 exec_always --no-startup-id RR
-exec_always exec picom &
+exec_always --no-startup-id exec zathura /data/document/read/*
+#exec_always exec picom &
 exec_always --no-startup-id $HOME/.config/polybar/launch.sh
 exec_always feh --bg-scale /data/picture/system/wallpaper/greenpredator.jpg
+
+
+
+
+
+
+
+
+
 
 
 
