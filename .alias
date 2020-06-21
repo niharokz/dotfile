@@ -3,21 +3,25 @@
 #		WEBSITE		:	HTTPS://NIHARS.COM
 #		SOURCE		:	.alias
 #		CREATED ON	:	16-05-20
-#		MODIFIED ON	:	06-06-20
+#		MODIFIED ON	:	21-06-20
 #
 
-alias downloads='cd /data/download'
+alias ..='cd ..'
+alias data='cd /data/'
+alias download='cd /data/download'
+alias document='cd /data/document'
 alias dot='/usr/bin/git --git-dir=/data/workspace/dotfile --work-tree=$HOME'
 alias home='cd $HOME'
 alias l='ls -lart'
 alias ls='ls --color'
 alias nhr='cd /data/workspace/nihars.com'
+alias note='/data/workspace/tools/note.sh'
+alias read='zathura /data/document/read/*'
 alias tools='cd /data/workspace/tools'
 alias vi='vim'
 alias vih='/data/workspace/tools/header.sh'
+alias vi3='vih ~/.config/i3/config'
 alias work='cd /data/workspace/'
 alias yt='youtube-dl'
 alias yta='yt -x -f bestaudio/best --add-metadata -o "%(title)s.%(ext)s"'
-
-alias note='cd /data/workspace/Dropbox/notes ; vih'
 

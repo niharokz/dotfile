@@ -6,7 +6,7 @@
 #		MODIFIED ON	:	14-06-20
 
 # Set default keys
-set $browser vivaldi
+set $browser vivaldi-stable
 set $myterminal termite
 set $editor code
 set $mod Mod4
@@ -189,6 +189,7 @@ exec_always --no-startup-id RR
 exec_always exec picom &
 exec_always --no-startup-id $HOME/.config/polybar/launch.sh
 exec_always feh --bg-scale /data/picture/system/wallpaper/greenpredator.jpg
+
 
 
 
