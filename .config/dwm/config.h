@@ -24,8 +24,8 @@ static const char *colors[][3]      = {
 };
 
 /* tagging */
-/* static const char *tags[] = { "1", "2", "3", "4", "5" };*/
-static const char *tags[] = { "", "", "", "", "", "", "", "", "" };
+static const char *tags[] = { "0", "1", "2", "3", "4", "5", "6", "7", "8", "9" };
+/* static const char *tags[] = { "", "", "", "", "", "", "", "", "" }; */
 
 static const Rule rules[] = {
 	/* xprop(1):
@@ -64,7 +64,7 @@ static const Layout layouts[] = {
 static char dmenumon[2] = "0"; /* component of dmenucmd, manipulated in spawn() */
 static const char *dmenucmd[] = { "dmenu_run", "-m", dmenumon, "-fn", dmenufont, "-nb", col_black, "-nf", col_greendark, "-sb", col_greendark, "-sf", col_greenlight, NULL };
 static const char *termcmd[]  = { "termite", NULL };
-static const char *browsecmd[]  = { "brave", NULL };
+static const char *browsecmd[]  = { "vivaldi-stable", NULL };
 
 
 static Key keys[] = {
