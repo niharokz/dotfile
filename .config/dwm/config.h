@@ -64,7 +64,7 @@ static const Layout layouts[] = {
 static char dmenumon[2] = "0"; /* component of dmenucmd, manipulated in spawn() */
 static const char *dmenucmd[] = { "dmenu_run", "-m", dmenumon, "-fn", dmenufont, "-nb", col_black, "-nf", col_greendark, "-sb", col_greendark, "-sf", col_greenlight, NULL };
 static const char *termcmd[]  = { "termite", NULL };
-static const char *browsecmd[]  = { "firefox-developer-edition", NULL };
+static const char *browsecmd[]  = { "brave", NULL };
 
 
 static Key keys[] = {
@@ -111,11 +111,11 @@ static Key keys[] = {
 	TAGKEYS(                        XK_9,                      8)
 	{ MODKEY|ShiftMask,             XK_r,      quit,           {0} },
 	{ MODKEY|ShiftMask,             XK_q,      spawn,          SHCMD("poweroff") },
-	{ 0, 0x1008ff12,	spawn,		SHCMD("pamixer -t") },
-	{ 0, 0x1008ff13,	spawn,		SHCMD("pamixer --allow-boost -i 3") },
-	{ 0, 0x1008ff11,	spawn,		SHCMD("pamixer --allow-boost -d 3") },
-	{ 0, 0x1008ff02,	spawn,		SHCMD("xbacklight -inc 15") },
-	{ 0, 0x1008ff03,	spawn,		SHCMD("xbacklight -dec 15") },
+	{ 0, 0x1008ff12,	spawn,		SHCMD("amixer set Master mute") },
+	{ 0, 0x1008ff13,	spawn,		SHCMD("amixer -M set Master 5%+") },
+	{ 0, 0x1008ff11,	spawn,		SHCMD("amixer -M set Master 5%-") },
+	{ 0, 0x1008ff02,	spawn,		SHCMD("xrandr --output eDP-1 --brightness 1") },
+	{ 0, 0x1008ff03,	spawn,		SHCMD("xrandr --output eDP-1 --brightness 0.5") },
 };
 
 /* button definitions */
