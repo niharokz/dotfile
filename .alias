@@ -3,7 +3,7 @@
 #		WEBSITE		:	HTTPS://NIHARS.COM
 #		SOURCE		:	.alias
 #		CREATED ON	:	16-05-20
-#		MODIFIED ON	:	05-07-20
+#		MODIFIED ON	:	06-07-20
 #
 
 alias data='cd /data/'
@@ -13,6 +13,7 @@ alias dot='/usr/bin/git --git-dir=/data/workspace/dotfile --work-tree=$HOME'
 alias home='cd $HOME'
 alias l='ls -larth'
 alias ls='ls --color'
+alias nay='yay -Rns'
 alias nf='neofetch'
 alias nhr='cd /data/workspace/nihars.com'
 alias note='/data/workspace/tools/note.sh'
@@ -24,4 +25,5 @@ alias vi3='vih ~/.config/i3/config'
 alias work='cd /data/workspace/'
 alias yt='youtube-dl'
 alias yta='yt -x -f bestaudio/best --add-metadata -o "%(title)s.%(ext)s"'
+
 
