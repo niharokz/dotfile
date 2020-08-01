@@ -1,16 +1,17 @@
-From 7accbcf7db35995d4c26c5cd69338aafa6feb89a Mon Sep 17 00:00:00 2001
-From: wtl <wtl144000@gmail.com>
-Date: Fri, 22 May 2020 22:38:38 +0300
-Subject: [PATCH] swallow X windows from the terminal
+From 8d1e7039c239619bee159e07e32b8d49837bf445 Mon Sep 17 00:00:00 2001
+From: jmanabc <jdwilkesx@gmail.com>
+Date: Tue, 7 Jul 2020 21:24:56 -0400
+Subject: [PATCH] Fixed swallowing by removing scanner variable from dwm.c and
+ corrected capitalization in config.def.h
 
 ---
  config.def.h |   9 ++-
  config.mk    |   2 +-
- dwm.c        | 218 +++++++++++++++++++++++++++++++++++++++++++++++++--
- 3 files changed, 220 insertions(+), 9 deletions(-)
+ dwm.c        | 196 +++++++++++++++++++++++++++++++++++++++++++++++++--
+ 3 files changed, 198 insertions(+), 9 deletions(-)
 
 diff --git a/config.def.h b/config.def.h
-index 1c0b587..4c0b25c 100644
+index 1c0b587..fe51476 100644
 --- a/config.def.h
 +++ b/config.def.h
 @@ -3,6 +3,7 @@
@@ -31,8 +32,8 @@ index 1c0b587..4c0b25c 100644
 +	/* class     instance  title           tags mask  isfloating  isterminal  noswallow  monitor */
 +	{ "Gimp",    NULL,     NULL,           0,         1,          0,           0,        -1 },
 +	{ "Firefox", NULL,     NULL,           1 << 8,    0,          0,          -1,        -1 },
-+	{ "st",      NULL,     NULL,           0,         0,          1,          -1,        -1 },
-+	{ NULL,      NULL,     "Event Tester", 0,         1,          0,           1,        -1 }, /* xev */
++	{ "St",      NULL,     NULL,           0,         0,          1,           0,        -1 },
++	{ NULL,      NULL,     "Event Tester", 0,         0,          0,           1,        -1 }, /* xev */
  };
  
  /* layout(s) */
@@ -50,7 +51,7 @@ index 7084c33..b77641d 100644
  # flags
  CPPFLAGS = -D_DEFAULT_SOURCE -D_BSD_SOURCE -D_POSIX_C_SOURCE=200809L -DVERSION=\"${VERSION}\" ${XINERAMAFLAGS}
 diff --git a/dwm.c b/dwm.c
-index 9fd0286..1befee4 100644
+index 9fd0286..c58de28 100644
 --- a/dwm.c
 +++ b/dwm.c
 @@ -40,6 +40,8 @@
@@ -84,7 +85,7 @@ index 9fd0286..1befee4 100644
  	int monitor;
  } Rule;
  
-@@ -235,9 +241,16 @@ static int xerrordummy(Display *dpy, XErrorEvent *ee);
+@@ -235,6 +241,12 @@ static int xerrordummy(Display *dpy, XErrorEvent *ee);
  static int xerrorstart(Display *dpy, XErrorEvent *ee);
  static void zoom(const Arg *arg);
  
@@ -97,11 +98,7 @@ index 9fd0286..1befee4 100644
  /* variables */
  static const char broken[] = "broken";
  static char stext[256];
-+static int scanner;
- static int screen;
- static int sw, sh;           /* X display screen geometry width, height */
- static int bh, blw = 0;      /* bar geometry */
-@@ -269,6 +282,8 @@ static Drw *drw;
+@@ -269,6 +281,8 @@ static Drw *drw;
  static Monitor *mons, *selmon;
  static Window root, wmcheckwin;
  
@@ -110,15 +107,7 @@ index 9fd0286..1befee4 100644
  /* configuration, allows nested code to access above variables */
  #include "config.h"
  
-@@ -286,6 +301,7 @@ applyrules(Client *c)
- 	XClassHint ch = { NULL, NULL };
- 
- 	/* rule matching */
-+	c->noswallow = -1;
- 	c->isfloating = 0;
- 	c->tags = 0;
- 	XGetClassHint(dpy, c->win, &ch);
-@@ -298,6 +314,8 @@ applyrules(Client *c)
+@@ -298,6 +312,8 @@ applyrules(Client *c)
  		&& (!r->class || strstr(class, r->class))
  		&& (!r->instance || strstr(instance, r->instance)))
  		{
@@ -127,18 +116,17 @@ index 9fd0286..1befee4 100644
  			c->isfloating = r->isfloating;
  			c->tags |= r->tags;
  			for (m = mons; m && m->num != r->monitor; m = m->next);
-@@ -414,6 +432,61 @@ attachstack(Client *c)
+@@ -414,6 +430,53 @@ attachstack(Client *c)
  	c->mon->stack = c;
  }
  
 +void
 +swallow(Client *p, Client *c)
 +{
-+	Client *s;
 +
-+	if (c->noswallow > 0 || c->isterminal)
++	if (c->noswallow || c->isterminal)
 +		return;
-+	if (c->noswallow < 0 && !swallowfloating && c->isfloating)
++	if (c->noswallow && !swallowfloating && c->isfloating)
 +		return;
 +
 +	detach(c);
@@ -153,13 +141,8 @@ index 9fd0286..1befee4 100644
 +	Window w = p->win;
 +	p->win = c->win;
 +	c->win = w;
-+
-+	XChangeProperty(dpy, c->win, netatom[NetClientList], XA_WINDOW, 32, PropModeReplace,
-+		(unsigned char *) &(p->win), 1);
-+
 +	updatetitle(p);
-+	s = scanner ? c : p;
-+	XMoveResizeWindow(dpy, p->win, s->x, s->y, s->w, s->h);
++	XMoveResizeWindow(dpy, p->win, p->x, p->y, p->w, p->h);
 +	arrange(p->mon);
 +	configure(p);
 +	updateclientlist();
@@ -172,8 +155,6 @@ index 9fd0286..1befee4 100644
 +
 +	free(c->swallowing);
 +	c->swallowing = NULL;
-+
-+	XDeleteProperty(dpy, c->win, netatom[NetClientList]);
 +
 +	/* unfullscreen the client */
 +	setfullscreen(c, 0);
@@ -189,7 +170,7 @@ index 9fd0286..1befee4 100644
  void
  buttonpress(XEvent *e)
  {
-@@ -653,6 +726,9 @@ destroynotify(XEvent *e)
+@@ -653,6 +716,9 @@ destroynotify(XEvent *e)
  
  	if ((c = wintoclient(ev->window)))
  		unmanage(c, 1);
@@ -199,7 +180,7 @@ index 9fd0286..1befee4 100644
  }
  
  void
-@@ -1018,12 +1094,13 @@ killclient(const Arg *arg)
+@@ -1018,12 +1084,13 @@ killclient(const Arg *arg)
  void
  manage(Window w, XWindowAttributes *wa)
  {
@@ -214,7 +195,7 @@ index 9fd0286..1befee4 100644
  	/* geometry */
  	c->x = c->oldx = wa->x;
  	c->y = c->oldy = wa->y;
-@@ -1038,6 +1115,7 @@ manage(Window w, XWindowAttributes *wa)
+@@ -1038,6 +1105,7 @@ manage(Window w, XWindowAttributes *wa)
  	} else {
  		c->mon = selmon;
  		applyrules(c);
@@ -222,7 +203,7 @@ index 9fd0286..1befee4 100644
  	}
  
  	if (c->x + WIDTH(c) > c->mon->mx + c->mon->mw)
-@@ -1074,6 +1152,8 @@ manage(Window w, XWindowAttributes *wa)
+@@ -1074,6 +1142,8 @@ manage(Window w, XWindowAttributes *wa)
  	c->mon->sel = c;
  	arrange(c->mon);
  	XMapWindow(dpy, c->win);
@@ -231,34 +212,7 @@ index 9fd0286..1befee4 100644
  	focus(NULL);
  }
  
-@@ -1384,7 +1464,9 @@ run(void)
- void
- scan(void)
- {
-+	scanner = 1;
- 	unsigned int i, num;
-+	char swin[256];
- 	Window d1, d2, *wins = NULL;
- 	XWindowAttributes wa;
- 
-@@ -1395,6 +1477,8 @@ scan(void)
- 				continue;
- 			if (wa.map_state == IsViewable || getstate(wins[i]) == IconicState)
- 				manage(wins[i], &wa);
-+			else if (gettextprop(wins[i], netatom[NetClientList], swin, sizeof swin))
-+				manage(wins[i], &wa);
- 		}
- 		for (i = 0; i < num; i++) { /* now the transients */
- 			if (!XGetWindowAttributes(dpy, wins[i], &wa))
-@@ -1406,6 +1490,7 @@ scan(void)
- 		if (wins)
- 			XFree(wins);
- 	}
-+	scanner = 0;
- }
- 
- void
-@@ -1768,6 +1853,20 @@ unmanage(Client *c, int destroyed)
+@@ -1768,6 +1838,20 @@ unmanage(Client *c, int destroyed)
  	Monitor *m = c->mon;
  	XWindowChanges wc;
  
@@ -279,7 +233,7 @@ index 9fd0286..1befee4 100644
  	detach(c);
  	detachstack(c);
  	if (!destroyed) {
-@@ -1782,9 +1881,12 @@ unmanage(Client *c, int destroyed)
+@@ -1782,9 +1866,12 @@ unmanage(Client *c, int destroyed)
  		XUngrabServer(dpy);
  	}
  	free(c);
@@ -295,7 +249,7 @@ index 9fd0286..1befee4 100644
  }
  
  void
-@@ -2047,6 +2149,110 @@ view(const Arg *arg)
+@@ -2047,6 +2134,103 @@ view(const Arg *arg)
  	arrange(selmon);
  }
  
@@ -337,25 +291,18 @@ index 9fd0286..1befee4 100644
 +{
 +	unsigned int v = 0;
 +
-+#if defined(__linux__)
++#ifdef __linux__
 +	FILE *f;
 +	char buf[256];
 +	snprintf(buf, sizeof(buf) - 1, "/proc/%u/stat", (unsigned)p);
 +
 +	if (!(f = fopen(buf, "r")))
-+		return (pid_t)0;
++		return 0;
 +
-+	if (fscanf(f, "%*u %*s %*c %u", (unsigned *)&v) != 1)
-+		v = (pid_t)0;
++	fscanf(f, "%*u %*s %*c %u", &v);
 +	fclose(f);
-+#elif defined(__FreeBSD__)
-+	struct kinfo_proc *proc = kinfo_getproc(p);
-+	if (!proc)
-+		return (pid_t)0;
++#endif /* __linux__*/
 +
-+	v = proc->ki_ppid;
-+	free(proc);
-+#endif
 +	return (pid_t)v;
 +}
 +
@@ -406,7 +353,7 @@ index 9fd0286..1befee4 100644
  Client *
  wintoclient(Window w)
  {
-@@ -2138,6 +2344,8 @@ main(int argc, char *argv[])
+@@ -2138,6 +2322,8 @@ main(int argc, char *argv[])
  		fputs("warning: no locale support\n", stderr);
  	if (!(dpy = XOpenDisplay(NULL)))
  		die("dwm: cannot open display");
@@ -416,5 +363,5 @@ index 9fd0286..1befee4 100644
  	setup();
  #ifdef __OpenBSD__
 -- 
-2.26.2
+2.27.0
 
