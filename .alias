@@ -3,7 +3,7 @@
 #		WEBSITE		:	HTTPS://NIHARS.COM
 #		SOURCE		:	.alias
 #		CREATED ON	:	16-05-20
-#		MODIFIED ON	:	02-08-20
+#		MODIFIED ON	:	26-08-20
 #
 
 alias data='cd $DATA/'
@@ -14,11 +14,12 @@ alias home='cd $HOME'
 alias l='ls -larth'
 alias ls='ls --color'
 alias nay='yay -Rns'
+alias narch='cd $DATA/workspace/narch'
 alias nf='neofetch'
 alias nhr='cd $DATA/workspace/nihars.com'
 alias note='cd $DATA/onedrive/note'
+alias fybo='cd  $DATA/workspace/fybo'
 alias read='zathura $DATA/document/read/* &1'
-alias tools='cd $DATA/workspace/tools'
 alias vi='nvim'
 alias vih='$DATA/workspace/tools/header.sh'
 alias work='cd $DATA/workspace/'
