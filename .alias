@@ -1,12 +1,16 @@
 #
-#		NAME		:	NIHAR SAMANTARAY
-#		WEBSITE		:	HTTPS://NIHARS.COM
-#		SOURCE		:	.alias
-#		CREATED ON	:	16-05-20
-#		MODIFIED ON	:	26-08-20
+#       ███╗░░██╗██╗██╗░░██╗░█████╗░██████╗░░█████╗░██╗░░██╗███████╗
+#       ████╗░██║██║██║░░██║██╔══██╗██╔══██╗██╔══██╗██║░██╔╝╚════██║
+#       ██╔██╗██║██║███████║███████║██████╔╝██║░░██║█████═╝░░░███╔═╝
+#       ██║╚████║██║██╔══██║██╔══██║██╔══██╗██║░░██║██╔═██╗░██╔══╝░░
+#       ██║░╚███║██║██║░░██║██║░░██║██║░░██║╚█████╔╝██║░╚██╗███████╗
+#       ╚═╝░░╚══╝╚═╝╚═╝░░╚═╝╚═╝░░╚═╝╚═╝░░╚═╝░╚════╝░╚═╝░░╚═╝╚══════╝
+#
+#       DRAFTED BY NIHAR SAMANTARAY ON 13-09-20. [https://nihars.com]
+#       SOURCE [.alias] LAST MODIFIED ON 13-09-20
 #
 
-alias data='cd $DATA/'
+alias d='cd $DATA/'
 alias download='cd $DATA/download'
 alias document='cd $DATA/document'
 alias dot='/usr/bin/git --git-dir=$DATA/workspace/dotfile --work-tree=$HOME'
@@ -20,8 +24,11 @@ alias nhr='cd $DATA/workspace/nihars.com'
 alias note='cd $DATA/onedrive/note'
 alias fybo='cd  $DATA/workspace/fybo'
 alias read='zathura $DATA/document/read/* &1'
-alias vi='nvim'
-alias vih='$DATA/workspace/tools/header.sh'
+alias v='nvim'
+alias vih='$DATA/workspace/narch/header.sh'
+alias w='cd $DATA/workspace/'
+alias wifi='$DATA/workspace/narch/wifi'
 alias work='cd $DATA/workspace/'
 alias yt='youtube-dl'
 alias yta='yt -x -f bestaudio/best --add-metadata -o "%(title)s.%(ext)s"'
+
