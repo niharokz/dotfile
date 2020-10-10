@@ -1,19 +1,25 @@
 syntax on
 set encoding=UTF-8
+set number
 set nowrap
 set ai
-set tabstop=2
+set nobackup
 set ls=2
 set autoindent
 set smartindent
 set incsearch
-set clipboard+=unnamedplus
 set shiftwidth=2
+
+set tabstop=4
+set softtabstop=4
+set shiftwidth=4
+set noexpandtab
 
 call plug#begin('~/.local/share/nvim/plugged')
 Plug 'scrooloose/nerdtree', { 'on':  'NERDTreeToggle' }
 Plug 'junegunn/goyo.vim'
-Plug 'racer-rust/vim-racer'
+" Plug 'racer-rust/vim-racer'
+" Plug 'rust-lang/rust.vim'
 call plug#end()
 
 set statusline=

@@ -13,7 +13,6 @@ import XMonad.Layout.LayoutModifier
 import XMonad.Layout.NoBorders(smartBorders, noBorders)
 import XMonad.Layout.Renamed (renamed, Rename(Replace))
 import XMonad.Layout.NoBorders
-import XMonad.Util.SpawnOnce
 
 myModMask :: KeyMask
 myModMask = mod4Mask
@@ -55,7 +54,6 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
     , ((0, xK_KP_Enter), spawn $ XMonad.terminal conf)
     , ((modm, xK_b), spawn $ browser)
     , ((0, xK_KP_Add), spawn $ browser)
-    , ((0, xK_KP_Subtract), spawn $ browser ++ " -incognito")
     , ((modm, xK_c), spawn $ editor)
     , ((0, xK_KP_Multiply), spawn $ editor)
     , ((modm,               xK_d     ), spawn $ launcher)
@@ -71,9 +69,8 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
     , ((modm,               xK_h     ), sendMessage Shrink)
     , ((modm,               xK_l     ), sendMessage Expand)
     , ((modm              , xK_g     ), sendMessage ToggleStruts)
-    , ((modm .|. shiftMask, xK_x     ), io (exitWith ExitSuccess))
+    , ((modm .|. shiftMask, xK_q     ), io (exitWith ExitSuccess))
     , ((modm              , xK_q     ), spawn "xmonad --recompile; xmonad --restart")
-    , ((modm              , xK_p     ), spawn "killall picom; picom")
     , ((0 , 0x1008ff12), spawn "pamixer -t")
     , ((0 , 0x1008ff11), spawn "pamixer -d 2")
     , ((0 , 0x1008ff13), spawn "pamixer -i 2")
@@ -84,11 +81,6 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
 
     [((m .|. modm, k), windows $ f i)
         | (i, k) <- zip (XMonad.workspaces conf) [xK_1 .. xK_9]
-        , (f, m) <- [(W.greedyView, 0), (W.shift, shiftMask)]]
-    ++
-
-    [((m .|. 0, k), windows $ f i)
-        | (i, k) <- zip (XMonad.workspaces conf) [xK_KP_End,xK_KP_Down,xK_KP_Page_Down,xK_KP_Left,xK_KP_Begin,xK_KP_Right,xK_KP_Home,xK_KP_Up,xK_KP_Page_Up]
         , (f, m) <- [(W.greedyView, 0), (W.shift, shiftMask)]]
     ++
 
@@ -123,8 +115,7 @@ myManageHook = composeAll
 
 myEventHook = mempty
 
-myStartupHook = 
- spawnOnce "picom &"
+myStartupHook = return ()
 
 main = do
  xmproc <- spawnPipe "xmobar /home/nihar/.config/xmobar/.xmobarrc"

@@ -1,29 +1,14 @@
-#
-#		NAME		:	NIHAR SAMANTARAY
-#		WEBSITE		:	HTTPS://NIHARS.COM
-#		SOURCE		:	.bashrc
-#		CREATED ON	:	06-06-20
-#		MODIFIED ON	:	02-08-20
-#
-
 # ~/.bashrc
-#
 
-# If not running interactively, don't do anything
 [[ $- != *i* ]] && return
-. .environment_variables
-. .alias
-# PS1='[\u@\h \W]\$ '
-# setup nice colors
-#export GREP_OPTIONS='--color=auto'
+. $XDG_CONFIG_HOME/.alias
 
 if [[ -z $DISPLAY ]] && [[ $(tty) = /dev/tty1 ]]; then 
-	exec startx; 
+	exec startx "$XDG_CONFIG_HOME/X11/xinitrc";
 fi
+
 alias grep='grep -n --color'
 alias ls='ls --color'
-export PS1="$(tput setaf 1)\w\n\[$(tput bold)\]\[$(tput setaf 1)\][\[$(tput setaf 3)\]\u\[$(tput setaf 2)\]@\[$(tput setaf 4)\]\h\[$(tput setaf 5)\]\[$(tput setaf 1)\]]\[$(tput setaf 7)\]\\$\[$(tput sgr0)\] "
+export PS1="\n\[$(tput sgr0)\]\[$(tput bold)\]\[\$(tput setaf 3)\]\u\[$(tput sgr0)\][\[$(tput sgr0)\]\[\$(tput setaf 7)\]\w\[$(tput sgr0)\]]\\$\[$(tput sgr0)\] "
 neofetch
-
-
-
+# export PS1="$(tput setaf 7)\w\n\[$(tput bold)\]\[$(tput setaf 1)\][\[$(tput setaf 3)\]\u\[$(tput setaf 2)\]@\[$(tput setaf 4)\]\h\[$(tput setaf 5)\]\[$(tput setaf 1)\]]\[$(tput setaf 7)\]\\$\[$(tput sgr0)\] "
