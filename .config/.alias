@@ -7,29 +7,27 @@
 #       ╚═╝░░╚══╝╚═╝╚═╝░░╚═╝╚═╝░░╚═╝╚═╝░░╚═╝░╚════╝░╚═╝░░╚═╝╚══════╝
 #
 #       DRAFTED BY NIHAR SAMANTARAY ON 13-09-20. [https://nihars.com]
-#       SOURCE [.alias] LAST MODIFIED ON 13-09-20
+#       SOURCE [.alias] LAST MODIFIED ON 31-10-20
 #
 
-alias d='cd $DATA/'
-alias download='cd $DATA/download'
-alias document='cd $DATA/document'
-alias dot='/usr/bin/git --git-dir=$DATA/workspace/dotfile --work-tree=$HOME'
+alias d='cd $HOME/'
+alias download='cd $HOME/download'
+alias document='cd $HOME/document'
+alias dot='/usr/bin/git --git-dir=$HOME/.config/.dotfile --work-tree=$HOME'
 alias home='cd $HOME'
 alias l='ls -larth'
 alias ls='ls --color'
 alias nay='yay -Rns'
-alias narch='cd $DATA/workspace/narch'
+alias narch='cd $HOME/workspace/narch'
 alias nf='neofetch'
-alias nhr='cd $DATA/workspace/nihars.com'
-alias note='cd $DATA/onedrive/note'
-alias fybo='cd  $DATA/workspace/fybo'
-alias read='zathura $DATA/document/read/* &1'
+alias nhr='cd $HOME/workspace/nihars.com'
+alias fybo='cd  $HOME/workspace/fybo'
 alias v='nvim'
 alias vi='nvim'
-alias vih='$DATA/workspace/narch/header.sh'
-alias w='cd $DATA/workspace/'
-alias wifi='$DATA/workspace/narch/wifi'
-alias work='cd $DATA/workspace/'
+alias vih='$HOME/workspace/narch/header.sh'
+alias w='cd $HOME/workspace/'
+alias wifi='$HOME/workspace/narch/wifi'
+alias work='cd $HOME/workspace/'
 alias yt='youtube-dl'
 alias yta='yt -x -f bestaudio/best --add-metadata -o "%(title)s.%(ext)s"'
 
