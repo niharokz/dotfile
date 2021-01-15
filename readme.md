@@ -52,6 +52,14 @@ Don't want to see untracked files:
 dot config status.showUntrackedFiles no
 ~~~
 
+## Checkout
+While installing dot files in a new system:
+~~~bash
+dot='/usr/bin/git --git-dir=$HOME/.config/.dotfile --work-tree=$HOME'
+git clone https://gitlab.com/niharokz/dotfile.git $HOME/.config/.dotfile
+dot checkout
+~~~
+
 ## References
 
 Using a bare Git repository is described here:
