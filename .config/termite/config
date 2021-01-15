@@ -6,7 +6,7 @@ bold_is_bright = true
 #cell_width_scale = 1.0
 clickable_url = true
 #dynamic_title = true
-font = FiraCode 10 
+font = FiraCode 11 
 fullscreen = true
 #icon_name = terminal
 #mouse_autohide = false
@@ -41,27 +41,67 @@ scrollback_lines = 10000
 #scrollbar = off
 
 [colors]
-foreground      = #ffffff
-background = #000000
-background = rgba(0, 0, 0, 0.8)
-cursor          = #356A66
+#foreground      = #ffffff
+#background = #000000
+#background = rgba(0, 0, 0, 0.8)
+#cursor          = #356A66
+#
+#color0 = #010D0B
+#color1 = #167149
+#color2 = #1B8B56
+#color3 = #2B8D4A
+#color4 = #2DAA66
+#color5 = #35B264
+#color6 = #4AA066
+#color7 = #A2DDBC
+#color8 = #719A83
+#color9 = #167149
+#color10 = #1B8B56
+#color11 = #2B8D4A
+#color12 = #2DAA66
+#color13 = #35B264
+#color14 = #4AA066
+#color15 = #A2DDBC
 
-color0 = #010D0B
-color1 = #167149
-color2 = #1B8B56
-color3 = #2B8D4A
-color4 = #2DAA66
-color5 = #35B264
-color6 = #4AA066
-color7 = #A2DDBC
-color8 = #719A83
-color9 = #167149
-color10 = #1B8B56
-color11 = #2B8D4A
-color12 = #2DAA66
-color13 = #35B264
-color14 = #4AA066
-color15 = #A2DDBC
+[colors]
+
+# special
+foreground      = #d8dee9
+foreground_bold = #d8dee9
+cursor          = #ecf4f4
+background      = #000000
+
+# black
+color0  = #000000
+color8  = #0d1d1c
+
+# red
+color1  = #1a3b38
+color9  = #285854
+
+# green
+color2  = #285854
+color10 = #2e6762
+
+# yellow
+color3  = #8ebeba
+color11 = #a1c9c6
+
+# blue
+color4  = #42938c
+color12 = #42938c
+
+# magenta
+color5  = #214a46
+color13 = #214a46
+
+# cyan
+color6  = #2e6762
+color14 = #2e6762
+
+# white
+color7  = #ffffff
+color15 = #ecf4f4
 
 [hints]
 #font = Monospace 12
