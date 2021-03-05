@@ -99,4 +99,7 @@ source /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zs
 # Suggest aliases for commands
 source /usr/share/zsh/plugins/zsh-you-should-use/you-should-use.plugin.zsh 2>/dev/null
 
-neofetch
+pfetch
+rclone sync dropbox: $DATA/cloud/dropbox
+echo "Things todo:"
+t list
