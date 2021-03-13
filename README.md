@@ -55,7 +55,7 @@ dot config status.showUntrackedFiles no
 ## Checkout
 While installing dot files in a new system:
 ~~~bash
-git clone --bare https://gitlab.com/niharokz/dotfile.git $HOME/.config/.dotfile
+git clone --bare git@gitlab.com:niharokz/dotfile.git $HOME/.config/.dotfile
 dot='/usr/bin/git --git-dir=$HOME/.config/.dotfile --work-tree=$HOME'
 dot checkout
 ~~~
