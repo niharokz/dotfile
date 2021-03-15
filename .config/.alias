@@ -1,3 +1,5 @@
+#!/bin/bash
+
 #
 #       ███╗░░██╗██╗██╗░░██╗░█████╗░██████╗░░█████╗░██╗░░██╗███████╗
 #       ████╗░██║██║██║░░██║██╔══██╗██╔══██╗██╔══██╗██║░██╔╝╚════██║
@@ -7,9 +9,9 @@
 #       ╚═╝░░╚══╝╚═╝╚═╝░░╚═╝╚═╝░░╚═╝╚═╝░░╚═╝░╚════╝░╚═╝░░╚═╝╚══════╝
 #
 #       DRAFTED BY NIHAR SAMANTARAY ON 13-09-20. [https://nihars.com]
-#       SOURCE [.alias] LAST MODIFIED ON 31-10-20
-#
+#       SOURCE [.alias] LAST MODIFIED ON 15-03-21
 
+alias c='clear'
 alias d='cd $DATA'
 alias download='cd $HOME/download'
 alias document='cd $HOME/document'
@@ -28,8 +30,9 @@ alias t='todo.sh -d $DATA/cloud/dropbox/todo/config'
 alias v='nvim'
 alias vi='nvim'
 alias vih='$HOME/workspace/narch/header.sh'
+alias video='cd $DATA/video'
 alias w='cd $HOME/workspace/'
-alias wifi='$HOME/workspace/narch/wifi'
+alias wifi='$HOME/workspace/narch/wifi.sh'
 alias work='cd $HOME/workspace/'
 alias yt='youtube-dl'
 alias yta='yt -x -f bestaudio/best --add-metadata -o "%(title)s.%(ext)s"'
@@ -60,4 +63,5 @@ ex ()
     echo "'$1' is not a valid file"
   fi
 }
+
 
