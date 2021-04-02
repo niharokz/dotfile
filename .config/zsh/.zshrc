@@ -1,17 +1,28 @@
 #!/bin/zsh
+
 #
-#       ███╗   ██╗██╗██╗  ██╗ █████╗ ██████╗ ███████╗
-#       ████╗  ██║██║██║  ██║██╔══██╗██╔══██╗██╔════╝
-#       ██╔██╗ ██║██║███████║███████║██████╔╝███████╗
-#       ██║╚██╗██║██║██╔══██║██╔══██║██╔══██╗╚════██║
-#       ██║ ╚████║██║██║  ██║██║  ██║██║  ██║███████║
-#       ╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝╚══════╝
+#       ███╗░░██╗██╗██╗░░██╗░█████╗░██████╗░░█████╗░██╗░░██╗███████╗
+#       ████╗░██║██║██║░░██║██╔══██╗██╔══██╗██╔══██╗██║░██╔╝╚════██║
+#       ██╔██╗██║██║███████║███████║██████╔╝██║░░██║█████═╝░░░███╔═╝
+#       ██║╚████║██║██╔══██║██╔══██║██╔══██╗██║░░██║██╔═██╗░██╔══╝░░
+#       ██║░╚███║██║██║░░██║██║░░██║██║░░██║╚█████╔╝██║░╚██╗███████╗
+#       ╚═╝░░╚══╝╚═╝╚═╝░░╚═╝╚═╝░░╚═╝╚═╝░░╚═╝░╚════╝░╚═╝░░╚═╝╚══════╝
 #
-#       DRAFTED BY NIHAR SAMANTARAY [https://nihars.com] 
-#       SOURCE [.zshrc] LAST MODIFIED ON 31-10-20
+#       DRAFTED BY NIHAR SAMANTARAY ON 30-10-20. [https://nihars.com]
+#       SOURCE [.config/zsh/.zshrc] LAST MODIFIED ON 03-04-21
+#
 
 autoload -U colors && colors	# Load colors
 PS1="%B%{$fg[red]%}[%{$fg[yellow]%}%n%{$fg[green]%}@%{$fg[blue]%}%M %{$fg[magenta]%}%~%{$fg[red]%}]%{$reset_color%}$%b "
+
+autoload -Uz vcs_info
+precmd_vcs_info() { vcs_info }
+precmd_functions+=( precmd_vcs_info )
+setopt prompt_subst
+RPROMPT=\$vcs_info_msg_0_
+zstyle ':vcs_info:git:*' formats '%F{30}(%b)%r%f'
+zstyle ':vcs_info:*' enable git
+
 setopt autocd		# Automatically cd into typed directory.
 stty stop undef		# Disable ctrl-s to freeze terminal.
 
@@ -28,11 +39,22 @@ if [[ -z $DISPLAY ]] && [[ $(tty) = /dev/tty1 ]]; then
     exec startx "$XDG_CONFIG_HOME/X11/xinitrc";    
 fi 
 
-# Basic auto/tab complete:
-zstyle ':completion:*' menu select
-
 # Auto complete with case insenstivity
-zstyle ':completion:*' matcher-list '' 'm:{a-zA-Z}={A-Za-z}' 'r:|[._-]=* r:|=*' 'l:|=* r:|=*'
+zstyle ':completion:*' auto-description 'specify: %d'
+zstyle ':completion:*' completer _expand _complete _correct _approximate
+zstyle ':completion:*' group-name ''
+zstyle ':completion:*' menu select=2
+eval "$(dircolors -b)"
+zstyle ':completion:*:default' list-colors ${(s.:.)LS_COLORS}
+zstyle ':completion:*' list-colors ''
+zstyle ':completion:*' list-prompt %SAt %p: Hit TAB for more, or the character to insert%s
+zstyle ':completion:*' matcher-list '' 'm:{a-z}={A-Z}' 'm:{a-zA-Z}={A-Za-z}' 'r:|[._-]=* r:|=* l:|=*'
+zstyle ':completion:*' menu select=long
+zstyle ':completion:*' select-prompt %SScrolling active: current selection at %p%s
+zstyle ':completion:*' use-compctl false
+zstyle ':completion:*' verbose true
+zstyle ':completion:*:*:kill:*:processes' list-colors '=(#b) #([0-9]#)*=0=01;31'
+zstyle ':completion:*:kill:*' command 'ps -u $USER -o pid,%cpu,tty,cputime,cmd'
 
 autoload -U compinit
 zstyle ':completion:*' menu select
@@ -103,3 +125,4 @@ pfetch
 rclone sync dropbox: $DATA/cloud/dropbox
 echo "Things todo:"
 t list
+

@@ -68,7 +68,7 @@ static const Layout layouts[] = {
 /* commands */
 static char dmenumon[2] = "0"; /* component of dmenucmd, manipulated in spawn() */
 static const char *dmenucmd[] = { "dmenu_run", "-m", dmenumon, "-fn", dmenufont, "-nb", col_black, "-nf", col_white, "-sb", col_greendark, "-sf", col_greenlight, NULL };
-static const char *termcmd[]  = { "termite", NULL };
+static const char *termcmd[]  = { "alacritty", NULL };
 static const char *browsecmd[]  = { "brave", NULL };
 
 
@@ -115,7 +115,7 @@ static Key keys[] = {
 	TAGKEYS(                        XK_8,                      7)
 	TAGKEYS(                        XK_9,                      8)
 	{ MODKEY|ShiftMask,             XK_r,      quit,           {0} },
-	{ MODKEY|ShiftMask,             XK_q,      spawn,          SHCMD("poweroff") },
+	{ MODKEY|ShiftMask,             XK_q,      spawn,          SHCMD("cpoweroff") },
 	{ 0, 0x1008ff12,	spawn,		SHCMD("pamixer -t") },
 	{ 0, 0x1008ff13,	spawn,		SHCMD("pamixer -i 2") },
 	{ 0, 0x1008ff11,	spawn,		SHCMD("pamixer -d 2") },
