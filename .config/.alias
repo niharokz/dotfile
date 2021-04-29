@@ -1,15 +1,15 @@
 #!/bin/bash
 
 #
-#       ███╗░░██╗██╗██╗░░██╗░█████╗░██████╗░░█████╗░██╗░░██╗███████╗
-#       ████╗░██║██║██║░░██║██╔══██╗██╔══██╗██╔══██╗██║░██╔╝╚════██║
-#       ██╔██╗██║██║███████║███████║██████╔╝██║░░██║█████═╝░░░███╔═╝
-#       ██║╚████║██║██╔══██║██╔══██║██╔══██╗██║░░██║██╔═██╗░██╔══╝░░
-#       ██║░╚███║██║██║░░██║██║░░██║██║░░██║╚█████╔╝██║░╚██╗███████╗
-#       ╚═╝░░╚══╝╚═╝╚═╝░░╚═╝╚═╝░░╚═╝╚═╝░░╚═╝░╚════╝░╚═╝░░╚═╝╚══════╝
+#       ███╗   ██╗██╗██╗  ██╗ █████╗ ██████╗ ███████╗
+#       ████╗  ██║██║██║  ██║██╔══██╗██╔══██╗██╔════╝
+#       ██╔██╗ ██║██║███████║███████║██████╔╝███████╗
+#       ██║╚██╗██║██║██╔══██║██╔══██║██╔══██╗╚════██║
+#       ██║ ╚████║██║██║  ██║██║  ██║██║  ██║███████║
+#       ╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝╚══════╝
+#       DRAFTED BY [https://nihar.page] ON 13-09-2020.
+#       SOURCE [.alias] LAST MODIFIED ON 29-04-2021.
 #
-#       DRAFTED BY NIHAR SAMANTARAY ON 13-09-20. [https://nihars.com]
-#       SOURCE [.alias] LAST MODIFIED ON 15-03-21
 
 alias c='clear'
 alias d='cd $DATA'
@@ -18,13 +18,13 @@ alias document='cd $HOME/document'
 alias dot='/usr/bin/git --git-dir=$HOME/.config/.dotfile --work-tree=$HOME'
 alias g='git'
 alias home='cd $HOME'
-alias l='ls -larth'
-alias ls='ls --color'
+alias l='exa -lar'
+alias ls='exa --color'
 alias n='$HOME/workspace/narch/note.sh'
 alias nay='yay -Rns'
 alias narch='cd $HOME/workspace/narch'
 alias nf='neofetch'
-alias nhr='cd $HOME/workspace/nihars.com'
+alias nhr='cd $HOME/workspace/nihar.page'
 alias fybo='cd  $HOME/workspace/fybo'
 alias t='todo.sh -d $DATA/cloud/dropbox/todo/config'
 alias v='nvim'
@@ -63,5 +63,3 @@ ex ()
     echo "'$1' is not a valid file"
   fi
 }
-
-
