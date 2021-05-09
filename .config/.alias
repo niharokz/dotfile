@@ -8,7 +8,7 @@
 #       ██║ ╚████║██║██║  ██║██║  ██║██║  ██║███████║
 #       ╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝╚══════╝
 #       DRAFTED BY [https://nihar.page] ON 13-09-2020.
-#       SOURCE [.alias] LAST MODIFIED ON 29-04-2021.
+#       SOURCE [.alias] LAST MODIFIED ON 29-04-21.
 #
 
 alias c='clear'
@@ -16,16 +16,17 @@ alias d='cd $DATA'
 alias download='cd $HOME/download'
 alias document='cd $HOME/document'
 alias dot='/usr/bin/git --git-dir=$HOME/.config/.dotfile --work-tree=$HOME'
+alias fybo='cd  $HOME/workspace/fybo'
 alias g='git'
 alias home='cd $HOME'
 alias l='exa -lar'
-alias ls='exa --color'
 alias n='$HOME/workspace/narch/note.sh'
+alias note='cd $DATA/cloud/dropbox/notes'
 alias nay='yay -Rns'
 alias narch='cd $HOME/workspace/narch'
 alias nf='neofetch'
 alias nhr='cd $HOME/workspace/nihar.page'
-alias fybo='cd  $HOME/workspace/fybo'
+alias pyenv='source $HOME/workspace/pyenv/bin/activate'
 alias t='todo.sh -d $DATA/cloud/dropbox/todo/config'
 alias v='nvim'
 alias vi='nvim'
@@ -33,7 +34,7 @@ alias vih='$HOME/workspace/narch/header.sh'
 alias video='cd $DATA/video'
 alias w='cd $HOME/workspace/'
 alias wifi='$HOME/workspace/narch/wifi.sh'
-alias work='cd $HOME/workspace/'
+alias work='cd $WORK'
 alias yt='youtube-dl'
 alias yta='yt -x -f bestaudio/best --add-metadata -o "%(title)s.%(ext)s"'
 
@@ -63,3 +64,4 @@ ex ()
     echo "'$1' is not a valid file"
   fi
 }
+
