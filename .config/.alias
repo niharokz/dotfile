@@ -8,33 +8,34 @@
 #       ██║ ╚████║██║██║  ██║██║  ██║██║  ██║███████║
 #       ╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝╚══════╝
 #       DRAFTED BY [https://nihar.page] ON 13-09-2020.
-#       SOURCE [.alias] LAST MODIFIED ON 29-04-21.
+#       SOURCE [.alias] LAST MODIFIED ON 09-05-2021.
 #
 
 alias c='clear'
-alias d='cd $DATA'
-alias download='cd $HOME/download'
+alias d='cd $HOME/download'
+alias data='cd $DATA'
 alias document='cd $HOME/document'
 alias dot='/usr/bin/git --git-dir=$HOME/.config/.dotfile --work-tree=$HOME'
-alias fybo='cd  $HOME/workspace/fybo'
+alias fybo='cd $WORK/fybo'
 alias g='git'
 alias home='cd $HOME'
 alias l='exa -lar'
-alias n='$HOME/workspace/narch/note.sh'
+alias n='$WORK/narch/note.sh'
 alias note='cd $DATA/cloud/dropbox/notes'
 alias nay='yay -Rns'
-alias narch='cd $HOME/workspace/narch'
+alias narch='cd $WORK/narch'
 alias nf='neofetch'
-alias nhr='cd $HOME/workspace/nihar.page'
-alias pyenv='source $HOME/workspace/pyenv/bin/activate'
+alias nhr='cd $WORK/nihar.page'
+alias pyenv='source $WORK/pyenv/bin/activate'
+alias r='mv -t /tmp ' 
 alias t='todo.sh -d $DATA/cloud/dropbox/todo/config'
 alias v='nvim'
 alias vi='nvim'
-alias vih='$HOME/workspace/narch/header.sh'
+alias vih='$WORK/narch/header.sh'
 alias video='cd $DATA/video'
-alias w='cd $HOME/workspace/'
-alias wifi='$HOME/workspace/narch/wifi.sh'
-alias work='cd $WORK'
+alias w='cd $WORK/'
+alias wifi='$WORK/narch/wifi.sh'
+alias work='cd $WORK/'
 alias yt='youtube-dl'
 alias yta='yt -x -f bestaudio/best --add-metadata -o "%(title)s.%(ext)s"'
 
@@ -64,4 +65,3 @@ ex ()
     echo "'$1' is not a valid file"
   fi
 }
-

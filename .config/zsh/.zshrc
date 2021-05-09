@@ -120,7 +120,7 @@ bindkey '^e' edit-command-line
 source /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh 2>/dev/null
 # Suggest aliases for commands
 source /usr/share/zsh/plugins/zsh-you-should-use/you-should-use.plugin.zsh 2>/dev/null
-
+source /usr/share/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh 2>/dev/null
 pfetch
 rclone sync dropbox: $DATA/cloud/dropbox
 echo "Things todo:"
