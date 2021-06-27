@@ -1,15 +1,14 @@
-#!/bin/zsh
+#!/bin/bash
 
 #
-#       ███╗░░██╗██╗██╗░░██╗░█████╗░██████╗░░█████╗░██╗░░██╗███████╗
-#       ████╗░██║██║██║░░██║██╔══██╗██╔══██╗██╔══██╗██║░██╔╝╚════██║
-#       ██╔██╗██║██║███████║███████║██████╔╝██║░░██║█████═╝░░░███╔═╝
-#       ██║╚████║██║██╔══██║██╔══██║██╔══██╗██║░░██║██╔═██╗░██╔══╝░░
-#       ██║░╚███║██║██║░░██║██║░░██║██║░░██║╚█████╔╝██║░╚██╗███████╗
-#       ╚═╝░░╚══╝╚═╝╚═╝░░╚═╝╚═╝░░╚═╝╚═╝░░╚═╝░╚════╝░╚═╝░░╚═╝╚══════╝
-#
-#       DRAFTED BY NIHAR SAMANTARAY ON 30-10-20. [https://nihars.com]
-#       SOURCE [.config/zsh/.zshrc] LAST MODIFIED ON 03-04-21
+#       ███╗   ██╗██╗██╗  ██╗ █████╗ ██████╗ ███████╗
+#       ████╗  ██║██║██║  ██║██╔══██╗██╔══██╗██╔════╝
+#       ██╔██╗ ██║██║███████║███████║██████╔╝███████╗
+#       ██║╚██╗██║██║██╔══██║██╔══██║██╔══██╗╚════██║
+#       ██║ ╚████║██║██║  ██║██║  ██║██║  ██║███████║
+#       ╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝╚══════╝
+#       DRAFTED BY [https://nihar.page] ON 30-10-2020.
+#       SOURCE [.zshrc] LAST MODIFIED ON 27-06-2021.
 #
 
 autoload -U colors && colors	# Load colors
@@ -118,11 +117,14 @@ bindkey '^e' edit-command-line
 
 # Load zsh-syntax-highlighting
 source /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh 2>/dev/null
-# Suggest aliases for commands
 source /usr/share/zsh/plugins/zsh-you-should-use/you-should-use.plugin.zsh 2>/dev/null
 source /usr/share/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh 2>/dev/null
+source /usr/share/zsh/plugins/zsh-history-substring-search/zsh-history-substring-search.zsh 2>/dev/null
+
+gpgconf --launch gpg-agent
 pfetch
 rclone sync dropbox: $DATA/cloud/dropbox
 echo "Things todo:"
 t list
+
 

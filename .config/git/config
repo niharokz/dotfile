@@ -1,3 +1,22 @@
+#!/bin/bash
+
+#
+#       ███╗   ██╗██╗██╗  ██╗ █████╗ ██████╗ ███████╗
+#       ████╗  ██║██║██║  ██║██╔══██╗██╔══██╗██╔════╝
+#       ██╔██╗ ██║██║███████║███████║██████╔╝███████╗
+#       ██║╚██╗██║██║██╔══██║██╔══██║██╔══██╗╚════██║
+#       ██║ ╚████║██║██║  ██║██║  ██║██║  ██║███████║
+#       ╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝╚══════╝
+#       DRAFTED BY [https://nihar.page] ON 27-06-2021.
+#       SOURCE [config] LAST MODIFIED ON 27-06-2021.
+#
+
+[commit]
+        gpgsign = true
+[tag]
+        gpgsign = true
 [user]
-	email = me@nihars.com
-	name = niharokz
+        email = hi@nihars.com
+        name = niharokz
+        signingkey = 86F83537E2BA66F0
+
