@@ -8,39 +8,51 @@
 #       ██║ ╚████║██║██║  ██║██║  ██║██║  ██║███████║
 #       ╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝╚══════╝
 #       DRAFTED BY [https://nihar.page] ON 13-09-2020.
-#       SOURCE [.alias] LAST MODIFIED ON 09-05-2021.
+#       SOURCE [.alias] LAST MODIFIED ON 27-06-2021.
 #
-
+ 
+# commands
 alias c='clear'
+alias g='git'
+alias l='exa -lar'
+alias nay='yay -Rns'
+alias nf='neofetch'
+alias r='mv -t /tmp ' 
+alias v='nvim'
+alias vi='nvim'
+alias yt='youtube-dl'
+
+# custom commands
+alias dot='/usr/bin/git --git-dir=$HOME/.config/.dotfile --work-tree=$HOME'
+alias n='$WORK/narch/note.sh'
+alias pyenv='source $WORK/pyenv/bin/activate'
+alias t='todo.sh -d $DATA/cloud/dropbox/todo/config'
+alias vih='$WORK/narch/header.sh'
+alias wifi='$WORK/narch/wifi.sh'
+alias yta='yt -x -f bestaudio/best --add-metadata -o "%(title)s.%(ext)s"'
+
+# shortcut path
 alias d='cd $HOME/download'
 alias data='cd $DATA'
 alias document='cd $HOME/document'
-alias dot='/usr/bin/git --git-dir=$HOME/.config/.dotfile --work-tree=$HOME'
 alias fybo='cd $WORK/fybo'
-alias g='git'
 alias home='cd $HOME'
-alias l='exa -lar'
-alias n='$WORK/narch/note.sh'
 alias note='cd $DATA/cloud/dropbox/notes'
-alias nay='yay -Rns'
 alias narch='cd $WORK/narch'
-alias nf='neofetch'
 alias nhr='cd $WORK/nihar.page'
-alias pyenv='source $WORK/pyenv/bin/activate'
-alias r='mv -t /tmp ' 
-alias t='todo.sh -d $DATA/cloud/dropbox/todo/config'
-alias v='nvim'
-alias vi='nvim'
-alias vih='$WORK/narch/header.sh'
+alias p='cd /data/workspace/planawish.com'
 alias video='cd $DATA/video'
 alias w='cd $WORK/'
-alias wifi='$WORK/narch/wifi.sh'
 alias work='cd $WORK/'
-alias yt='youtube-dl'
-alias yta='yt -x -f bestaudio/best --add-metadata -o "%(title)s.%(ext)s"'
 
-### ARCHIVE EXTRACTION
-# usage: ex <file>
+# development
+alias mm='python3 manage.py makemigrations'
+alias pl='cd /data/workspace/planawish.com'
+alias p='python3'
+alias pm='python3 manage.py'
+alias runserver='python3 manage.py runserver'
+
+# archive extraction : usage: ex <file>
 ex ()
 {
   if [ -f $1 ] ; then
@@ -65,3 +77,4 @@ ex ()
     echo "'$1' is not a valid file"
   fi
 }
+

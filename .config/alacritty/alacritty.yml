@@ -66,13 +66,11 @@ colors:
   selection:
     text: '#191919'
     background: '#d8dee9'
-
+                
 bell:
   animation: EaseOutExpo
   duration: 0
   color: '#ffffff'
-
-background_opacity: 1
 
 selection:
   semantic_escape_chars: ",│`|:\"' ()[]{}<>\t"
@@ -93,7 +91,7 @@ mouse:
   double_click: { threshold: 300 }
   triple_click: { threshold: 300 }
 
-  url:
+  hints:
     launcher:
       program: xdg-open
       args: []

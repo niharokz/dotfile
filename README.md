@@ -10,6 +10,10 @@ This method does not use symlinks (like most other dotfile repositories).
 After the installation, all the dotfiles will be physically present in your home folder, yet, 
 you will still have them under full version control.
 
+## Look and Feel
+
+![Screenshot](.config/screenshot.webp "screenshot")
+
 ## Usage
 
 Now all the dotfiles from the repository are installed in your home directory. 
