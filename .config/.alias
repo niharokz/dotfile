@@ -45,13 +45,6 @@ alias video='cd $DATA/video'
 alias w='cd $WORK/'
 alias work='cd $WORK/'
 
-# development
-alias mm='python3 manage.py makemigrations'
-alias pl='cd /data/workspace/planawish.com'
-alias p='python3'
-alias pm='python3 manage.py'
-alias runserver='python3 manage.py runserver'
-
 # archive extraction : usage: ex <file>
 ex ()
 {
@@ -77,4 +70,8 @@ ex ()
     echo "'$1' is not a valid file"
   fi
 }
+
+# Other alias
+[[ $- != *i* ]] && return    
+. $XDG_CONFIG_HOME/.secrets
 

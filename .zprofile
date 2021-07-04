@@ -50,8 +50,9 @@ export XDG_PICTURES_DIR="$DATA/cloud/gdrive/photo"
 export XDG_VIDEOS_DIR="$DATA/video"
 
 # SSH from pgp
-export GPG_TTY=$(tty)
+#export GPG_TTY=$(tty)
 export SSH_AUTH_SOCK=$(gpgconf --list-dirs agent-ssh-socket)
 
 # To check why not working
 # export _JAVA_OPTIONS=-Djava.util.prefs.userRoot="$XDG_CONFIG_HOME"/java
+

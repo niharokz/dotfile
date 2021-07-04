@@ -39,12 +39,7 @@ Plug 'itchyny/lightline.vim'
 call plug#end()
 
 " INDENTATION
-set tabstop=1 " Number of visual spaces per TAB.
-set softtabstop=1 " Number of spaces per TAB while editing.
-set expandtab " Expand to 4 spaces when you press TAB.
-set smarttab " Navigate by a TAB's width.
-set autoindent 
-set smartindent
+set tabstop=8 softtabstop=0 expandtab shiftwidth=4 smarttab
 
 " NUMBER
 set number relativenumber
