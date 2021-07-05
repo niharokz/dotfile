@@ -56,3 +56,6 @@ export SSH_AUTH_SOCK=$(gpgconf --list-dirs agent-ssh-socket)
 # To check why not working
 # export _JAVA_OPTIONS=-Djava.util.prefs.userRoot="$XDG_CONFIG_HOME"/java
 
+# NPM
+PATH="$HOME/.local/bin:$PATH"
+export npm_config_prefix="$HOME/.local"

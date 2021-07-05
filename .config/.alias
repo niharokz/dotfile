@@ -8,7 +8,7 @@
 #       ██║ ╚████║██║██║  ██║██║  ██║██║  ██║███████║
 #       ╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝╚══════╝
 #       DRAFTED BY [https://nihar.page] ON 13-09-2020.
-#       SOURCE [.alias] LAST MODIFIED ON 27-06-2021.
+#       SOURCE [.alias] LAST MODIFIED ON 04-07-2021.
 #
  
 # commands
@@ -17,30 +17,30 @@ alias g='git'
 alias l='exa -lar'
 alias nay='yay -Rns'
 alias nf='neofetch'
-alias r='mv -t /tmp ' 
+alias rmv='mv -t /tmp ' 
 alias v='nvim'
 alias vi='nvim'
 alias yt='youtube-dl'
 
 # custom commands
 alias dot='/usr/bin/git --git-dir=$HOME/.config/.dotfile --work-tree=$HOME'
+alias dropupload='rclone sync $DATA/cloud/dropbox dropbox:'
+alias dropdownload='rclone sync dropbox: $DATA/cloud/dropbox'
 alias n='$WORK/narch/note.sh'
 alias pyenv='source $WORK/pyenv/bin/activate'
-alias t='todo.sh -d $DATA/cloud/dropbox/todo/config'
 alias vih='$WORK/narch/header.sh'
 alias wifi='$WORK/narch/wifi.sh'
 alias yta='yt -x -f bestaudio/best --add-metadata -o "%(title)s.%(ext)s"'
 
 # shortcut path
+alias b='cd $DATA/backup'
 alias d='cd $HOME/download'
 alias data='cd $DATA'
-alias document='cd $HOME/document'
 alias fybo='cd $WORK/fybo'
 alias home='cd $HOME'
 alias note='cd $DATA/cloud/dropbox/notes'
 alias narch='cd $WORK/narch'
 alias nhr='cd $WORK/nihar.page'
-alias p='cd /data/workspace/planawish.com'
 alias video='cd $DATA/video'
 alias w='cd $WORK/'
 alias work='cd $WORK/'

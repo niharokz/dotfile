@@ -4,3 +4,4 @@ download
 .local
 .cache
 .vscode-oss
+.npm

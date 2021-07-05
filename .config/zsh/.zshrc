@@ -123,8 +123,3 @@ source /usr/share/zsh/plugins/zsh-history-substring-search/zsh-history-substring
 
 gpgconf --launch gpg-agent
 pfetch
-rclone sync dropbox: $DATA/cloud/dropbox
-echo "Things todo:"
-t list
-
-
