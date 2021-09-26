@@ -8,13 +8,13 @@
 #       ██║ ╚████║██║██║  ██║██║  ██║██║  ██║███████║
 #       ╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝╚══════╝
 #       DRAFTED BY [https://nihar.page] ON 13-09-2020.
-#       SOURCE [.alias] LAST MODIFIED ON 04-07-2021.
+#       SOURCE [.alias] LAST MODIFIED ON 18-09-2021.
 #
  
 # commands
 alias c='clear'
 alias g='git'
-alias l='exa -lar'
+alias l='exa -lars date'
 alias nay='yay -Rns'
 alias nf='neofetch'
 alias rmv='mv -t /tmp ' 
@@ -24,8 +24,8 @@ alias yt='youtube-dl'
 
 # custom commands
 alias dot='/usr/bin/git --git-dir=$HOME/.config/.dotfile --work-tree=$HOME'
-alias dropupload='rclone sync $DATA/cloud/dropbox dropbox:'
-alias dropdownload='rclone sync dropbox: $DATA/cloud/dropbox'
+alias dropupload='rclone -v sync $DATA/cloud/dropbox dropbox:'
+alias dropdownload='rclone -v sync dropbox: $DATA/cloud/dropbox'
 alias n='$WORK/narch/note.sh'
 alias pyenv='source $WORK/pyenv/bin/activate'
 alias vih='$WORK/narch/header.sh'
@@ -74,4 +74,5 @@ ex ()
 # Other alias
 [[ $- != *i* ]] && return    
 . $XDG_CONFIG_HOME/.secrets
+
 
