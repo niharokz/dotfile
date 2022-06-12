@@ -8,7 +8,7 @@
 #       ██║ ╚████║██║██║  ██║██║  ██║██║  ██║███████║
 #       ╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝╚══════╝
 #       DRAFTED BY [https://nihars.com] ON 11-05-2021.
-#       SOURCE [.zprofile] LAST MODIFIED ON 12-06-2021.
+#       SOURCE [.zprofile] LAST MODIFIED ON 12-06-2022.
 #
 
 # default programs:
@@ -36,8 +36,8 @@ export HISTFILE="${XDG_DATA_HOME:-$HOME/.local/share}/history"
 export LESSHISTFILE="-"
 
 # Shortcut to directories
-export DATA="~/data/"
-export BACKUP="$DATA/backup"
+export DATA="$HOME/data/"
+export BACKUP="$HOME/backup"
 export WORK="$DATA/workspace/"
 export ZDOTDIR="$HOME/.config/zsh"
 
@@ -66,3 +66,7 @@ fi
 # NPM
 PATH="$HOME/.local/bin:$PATH"
 export npm_config_prefix="$HOME/.local"
+
+
+
+

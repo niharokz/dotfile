@@ -7,10 +7,10 @@
 #       ██║╚██╗██║██║██╔══██║██╔══██║██╔══██╗╚════██║
 #       ██║ ╚████║██║██║  ██║██║  ██║██║  ██║███████║
 #       ╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝╚══════╝
-#       DRAFTED BY [https://nihar.page] ON 13-09-2020.
-#       SOURCE [.alias] LAST MODIFIED ON 18-09-2021.
+#       DRAFTED BY [https://nihars.com] ON 30-09-2020.
+#       SOURCE [.alias] LAST MODIFIED ON 12-06-2022.
 #
- 
+
 # commands
 alias c='clear'
 alias g='git'
@@ -40,7 +40,7 @@ alias fybo='cd $WORK/fybo'
 alias home='cd $HOME'
 alias note='cd $DATA/cloud/dropbox/notes'
 alias narch='cd $WORK/narch'
-alias nhr='cd $WORK/nihar.page'
+alias nhr='cd $WORK/nihars.com'
 alias video='cd $DATA/video'
 alias w='cd $WORK/'
 alias work='cd $WORK/'
@@ -74,5 +74,12 @@ ex ()
 # Other alias
 [[ $- != *i* ]] && return    
 . $XDG_CONFIG_HOME/.secrets
+
+
+
+
+
+
+
 
 
