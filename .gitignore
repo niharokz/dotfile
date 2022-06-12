@@ -1,4 +1,7 @@
 download
+data
+.viminfo
+.bash_history
 .ssh
 .pki
 .local

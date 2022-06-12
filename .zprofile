@@ -7,8 +7,8 @@
 #       ██║╚██╗██║██║██╔══██║██╔══██║██╔══██╗╚════██║
 #       ██║ ╚████║██║██║  ██║██║  ██║██║  ██║███████║
 #       ╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝╚══════╝
-#       DRAFTED BY [https://nihar.page] ON 11-05-2021.
-#       SOURCE [.zprofile] LAST MODIFIED ON 27-06-2021.
+#       DRAFTED BY [https://nihars.com] ON 11-05-2021.
+#       SOURCE [.zprofile] LAST MODIFIED ON 12-06-2021.
 #
 
 # default programs:
@@ -36,9 +36,9 @@ export HISTFILE="${XDG_DATA_HOME:-$HOME/.local/share}/history"
 export LESSHISTFILE="-"
 
 # Shortcut to directories
-export DATA="/data/"
-export BACKUP="/data/backup"
-export WORK="/data/workspace/"
+export DATA="~/data/"
+export BACKUP="$DATA/backup"
+export WORK="$DATA/workspace/"
 export ZDOTDIR="$HOME/.config/zsh"
 
 # XDG for desktop
@@ -51,7 +51,14 @@ export XDG_VIDEOS_DIR="$DATA/video"
 
 # SSH from pgp
 #export GPG_TTY=$(tty)
-export SSH_AUTH_SOCK=$(gpgconf --list-dirs agent-ssh-socket)
+#export SSH_AUTH_SOCK=$(gpgconf --list-dirs agent-ssh-socket)
+if ! pgrep -u "$USER" ssh-agent > /dev/null; then
+    ssh-agent -t 1h > "$XDG_RUNTIME_DIR/ssh-agent.env"
+fi
+if [[ ! "$SSH_AUTH_SOCK" ]]; then
+    source "$XDG_RUNTIME_DIR/ssh-agent.env" >/dev/null
+fi
+
 
 # To check why not working
 # export _JAVA_OPTIONS=-Djava.util.prefs.userRoot="$XDG_CONFIG_HOME"/java
