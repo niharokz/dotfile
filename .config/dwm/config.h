@@ -119,6 +119,7 @@ static Key keys[] = {
 	{ 0, 0x1008ff12,	spawn,		SHCMD("pamixer -t") },
 	{ 0, 0x1008ff13,	spawn,		SHCMD("pamixer -i 2") },
 	{ 0, 0x1008ff11,	spawn,		SHCMD("pamixer -d 2") },
+        { 0, 0xffeb,	        spawn,		SHCMD("scrot") },
 	{ 0, 0x1008ff02,	spawn,		SHCMD("xrandr --output eDP-1 --brightness 1") },
 	{ 0, 0x1008ff03,	spawn,		SHCMD("xrandr --output eDP-1 --brightness 0.5") },
 };

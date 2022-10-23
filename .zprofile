@@ -8,7 +8,7 @@
 #       ██║ ╚████║██║██║  ██║██║  ██║██║  ██║███████║
 #       ╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝╚══════╝
 #       DRAFTED BY [https://nihars.com] ON 11-05-2021.
-#       SOURCE [.zprofile] LAST MODIFIED ON 12-06-2022.
+#       SOURCE [.zprofile] LAST MODIFIED ON 14-06-2022.
 #
 
 # default programs:
@@ -31,8 +31,10 @@ export XAUTHORITY="$XDG_RUNTIME_DIR/Xauthority"
 export XINITRC="$XDG_CONFIG_HOME/X11/xinitrc"
 export XSERVERRC="$XDG_CONFIG_HOME/X11/xserverrc"
 export HISTFILE="$XDG_DATA_HOME/bash/history"
+export VSCODE_PORTABLE="$XDG_DATA_HOME/vscode"
+#export HISTFILE="${XDG_DATA_HOME:-$HOME/.local/share}/history"
+#export HISTFILE="$XDG_STATE_HOME"/bash/history
 export GNUPGHOME="$XDG_CONFIG_HOME/gnupg"
-export HISTFILE="${XDG_DATA_HOME:-$HOME/.local/share}/history"
 export LESSHISTFILE="-"
 
 # Shortcut to directories
@@ -61,12 +63,8 @@ fi
 
 
 # To check why not working
-# export _JAVA_OPTIONS=-Djava.util.prefs.userRoot="$XDG_CONFIG_HOME"/java
+export _JAVA_OPTIONS=-Djava.util.prefs.userRoot="$XDG_CONFIG_HOME"/java
 
 # NPM
 PATH="$HOME/.local/bin:$PATH"
 export npm_config_prefix="$HOME/.local"
-
-
-
-

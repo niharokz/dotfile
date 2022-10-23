@@ -7,8 +7,8 @@
 #       ██║╚██╗██║██║██╔══██║██╔══██║██╔══██╗╚════██║
 #       ██║ ╚████║██║██║  ██║██║  ██║██║  ██║███████║
 #       ╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝╚══════╝
-#       DRAFTED BY [https://nihars.com] ON 27-06-2021.
-#       SOURCE [config] LAST MODIFIED ON 12-06-2022.
+#       DRAFTED BY [https://nih.ar] ON 27-06-2021.
+#       SOURCE [config] LAST MODIFIED ON 23-10-2022.
 #
 
 [commit]
@@ -19,4 +19,6 @@
         email = hi@nihars.com
         name = niharokz
         signingkey = C4E7B20A17E66D9B
+
+
 

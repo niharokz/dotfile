@@ -7,8 +7,8 @@
 #       ██║╚██╗██║██║██╔══██║██╔══██║██╔══██╗╚════██║
 #       ██║ ╚████║██║██║  ██║██║  ██║██║  ██║███████║
 #       ╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝╚══════╝
-#       DRAFTED BY [https://nihars.com] ON 30-09-2020.
-#       SOURCE [.alias] LAST MODIFIED ON 12-06-2022.
+#       DRAFTED BY [https://nih.ar] ON 30-09-2020.
+#       SOURCE [.alias] LAST MODIFIED ON 23-10-2022.
 #
 
 # commands
@@ -23,6 +23,7 @@ alias vi='nvim'
 alias yt='youtube-dl'
 
 # custom commands
+alias code='code --extensions-dir "$XDG_DATA_HOME/vscode"'
 alias dot='/usr/bin/git --git-dir=$HOME/.config/.dotfile --work-tree=$HOME'
 alias dropupload='rclone -v sync $DATA/cloud/dropbox dropbox:'
 alias dropdownload='rclone -v sync dropbox: $DATA/cloud/dropbox'
@@ -30,6 +31,7 @@ alias n='$WORK/narch/note.sh'
 alias pyenv='source $WORK/pyenv/bin/activate'
 alias vih='$WORK/narch/header.sh'
 alias wifi='$WORK/narch/wifi.sh'
+alias tv='xrandr --output HDMI-1 --auto --left-of eDP-1 --mode 1920x1080'
 alias yta='yt -x -f bestaudio/best --add-metadata -o "%(title)s.%(ext)s"'
 
 # shortcut path
@@ -40,7 +42,7 @@ alias fybo='cd $WORK/fybo'
 alias home='cd $HOME'
 alias note='cd $DATA/cloud/dropbox/notes'
 alias narch='cd $WORK/narch'
-alias nhr='cd $WORK/nihars.com'
+alias nhr='cd $WORK/nih.ar'
 alias video='cd $DATA/video'
 alias w='cd $WORK/'
 alias work='cd $WORK/'
@@ -74,12 +76,4 @@ ex ()
 # Other alias
 [[ $- != *i* ]] && return    
 . $XDG_CONFIG_HOME/.secrets
-
-
-
-
-
-
-
-
 
