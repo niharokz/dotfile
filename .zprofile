@@ -7,8 +7,8 @@
 #       ██║╚██╗██║██║██╔══██║██╔══██║██╔══██╗╚════██║
 #       ██║ ╚████║██║██║  ██║██║  ██║██║  ██║███████║
 #       ╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝╚══════╝
-#       DRAFTED BY [https://nihars.com] ON 11-05-2021.
-#       SOURCE [.zprofile] LAST MODIFIED ON 14-06-2022.
+#       DRAFTED BY [https://nih.ar] ON 11-05-2021.
+#       SOURCE [.zprofile] LAST MODIFIED ON 18-02-2024.
 #
 
 # default programs:
@@ -68,3 +68,4 @@ export _JAVA_OPTIONS=-Djava.util.prefs.userRoot="$XDG_CONFIG_HOME"/java
 # NPM
 PATH="$HOME/.local/bin:$PATH"
 export npm_config_prefix="$HOME/.local"
+

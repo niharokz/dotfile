@@ -7,8 +7,8 @@
 #       ██║╚██╗██║██║██╔══██║██╔══██║██╔══██╗╚════██║
 #       ██║ ╚████║██║██║  ██║██║  ██║██║  ██║███████║
 #       ╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝╚══════╝
-#       DRAFTED BY [https://nihar.page] ON 30-10-2020.
-#       SOURCE [.zshrc] LAST MODIFIED ON 27-06-2021.
+#       DRAFTED BY [https://nih.ar] ON 30-10-2020.
+#       SOURCE [.zshrc] LAST MODIFIED ON 18-02-2024.
 #
 
 autoload -U colors && colors	# Load colors
@@ -121,5 +121,6 @@ source /usr/share/zsh/plugins/zsh-you-should-use/you-should-use.plugin.zsh 2>/de
 source /usr/share/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh 2>/dev/null
 source /usr/share/zsh/plugins/zsh-history-substring-search/zsh-history-substring-search.zsh 2>/dev/null
 
-gpgconf --launch gpg-agent
-pfetch
+#gpgconf --launch gpg-agent
+neofetch
+

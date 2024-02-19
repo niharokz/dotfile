@@ -8,18 +8,19 @@
 #       ██║ ╚████║██║██║  ██║██║  ██║██║  ██║███████║
 #       ╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝╚══════╝
 #       DRAFTED BY [https://nih.ar] ON 30-09-2020.
-#       SOURCE [.alias] LAST MODIFIED ON 23-10-2022.
+#       SOURCE [.alias] LAST MODIFIED ON 18-02-2024.
 #
 
 # commands
 alias c='clear'
 alias g='git'
 alias l='exa -lars date'
-alias nay='yay -Rns'
+alias nay='paru -Rns'
 alias nf='neofetch'
 alias rmv='mv -t /tmp ' 
 alias v='nvim'
 alias vi='nvim'
+alias yay='paru'
 alias yt='youtube-dl'
 
 # custom commands
@@ -76,4 +77,5 @@ ex ()
 # Other alias
 [[ $- != *i* ]] && return    
 . $XDG_CONFIG_HOME/.secrets
+
 

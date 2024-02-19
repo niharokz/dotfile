@@ -7,8 +7,8 @@
 "       ██║╚██╗██║██║██╔══██║██╔══██║██╔══██╗╚════██║
 "       ██║ ╚████║██║██║  ██║██║  ██║██║  ██║███████║
 "       ╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝╚══════╝
-"       DRAFTED BY [https://nihar.page] ON 10-04-2021.
-"       SOURCE [init.vim] LAST MODIFIED ON 29-04-2021.
+"       DRAFTED BY [https://nih.ar] ON 10-04-2020.
+"       SOURCE [init.vim] LAST MODIFIED ON 18-02-2024.
 "
 
 " GENERAL
@@ -104,4 +104,5 @@ set directory=$XDG_CACHE_HOME/vim/swap,~/,/tmp
 set backupdir=$XDG_CACHE_HOME/vim/backup,~/,/tmp
 set undodir=$XDG_CACHE_HOME/vim/undo,~/,/tmp
 set viminfo+=n$XDG_CACHE_HOME/vim/viminfo
+
 
