@@ -1,148 +1,104 @@
 import XMonad
-import System.IO
-import Data.Monoid
-import System.Exit
-import XMonad.Util.Run
+import XMonad.Util.EZConfig (additionalKeys)
+import XMonad.Util.Run (spawnPipe)
+import XMonad.Hooks.DynamicLog
 import XMonad.Hooks.ManageDocks
+import XMonad.Hooks.SetWMName
 import XMonad.Layout.Spacing
-import XMonad.Hooks.DynamicLog   (PP(..), dynamicLogWithPP, xmobarPP, wrap, defaultPP)
-import XMonad.Hooks.UrgencyHook
-import qualified XMonad.StackSet as W
-import qualified Data.Map        as M
-import XMonad.Layout.LayoutModifier
-import XMonad.Layout.NoBorders(smartBorders, noBorders)
-import XMonad.Layout.Renamed (renamed, Rename(Replace))
-import XMonad.Layout.NoBorders
-import XMonad.Util.SpawnOnce
+import XMonad.Layout.Gaps
+import XMonad.Util.NamedScratchpad
+import System.IO
+import Data.List (elemIndex)
+import Data.Maybe (fromJust)
+import XMonad.Actions.CycleWS (toggleWS)
 
-myModMask :: KeyMask
-myModMask = mod4Mask
+-- Launchers & Commands
+myTerminal      = "kitty"
+myEditor        = "nvim"
+myBrowser       = "vivaldi"
+myCodeEditor    = "code"
+myBeyondCompare = "bcompare"
 
-myFont :: String
-myFont = "xft:FiraCode:size=10:antialias=true"
+-- Color Palette (matches Kitty/Alacritty)
+myTeal    = "#33cccc"
+myDark    = "#0f2f2f"
+myBase    = "#1c1c1c"
+myText    = "#dcdccc"
 
-myTerminal :: String
-myTerminal = "termite"
+-- Dmenu
+myLauncher = "dmenu_run -h 36 -fn 'FiraCode Nerd Font:size=12' -nb '" ++ myDark ++ "' -nf '" ++ myText ++ "' -sb '" ++ myTeal ++ "' -sf '" ++ myDark ++ "'"
 
-browser :: String
-browser = "brave"
-
-editor :: String
-editor = "nvim"
-
-launcher :: String
-launcher= "dmenu_run -m 0 -fn Firacode:size=10 -nb black -nf white -sb '#42938C'"
-
-myBorderWidth :: Dimension
+-- XMonad basics
+myModMask     = mod4Mask -- Super key
 myBorderWidth = 2
 
-myNormalBorderColor :: String
-myNormalBorderColor  = "#333333"
---"#333333"
+-- Layout
+myLayout = avoidStruts $
+           gaps [(U,10),(D,10),(L,10),(R,10)] $
+           spacing 8 $
+           layoutHook def
 
-myFocusedBorderColor :: String
-myFocusedBorderColor = "#35B264"
---"#42938C"
+-- Wallpapers, Picom, Xmobar
+myStartupHook = do
+    spawn "picom --experimental-backends &"
+    spawn "feh --bg-scale ~/downloads/wal2.jpg"
+    spawn "xmobar ~/.config/xmobar/.xmobarrc"
+    setWMName "xmonad"
 
-myFocusFollowsMouse :: Bool
-myFocusFollowsMouse = True
+-- Workspaces (with icons)
+myWorkspaces :: [String]
+myWorkspaces =
+  [ "🏠 home"
+  , "🌐 web"
+  , "💻 dev"
+  , "📝 edit"
+  , "🗂 files"
+  , "🎞 media"
+  , "📄 docs"
+  , "🖥 term"
+  , "📬 mail"
+  ]
 
-
-myWorkspaces    = ["1","2","3","4","5","6","7","8","9"]
-
-
-myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
-
-    [ ((modm, xK_Return), spawn $ XMonad.terminal conf)
-    , ((0, xK_KP_Enter), spawn $ XMonad.terminal conf)
-    , ((modm, xK_b), spawn $ browser)
-    , ((0, xK_KP_Add), spawn $ browser)
-    , ((0, xK_KP_Subtract), spawn $ browser ++ " -incognito")
-    , ((modm, xK_c), spawn $ editor)
-    , ((0, xK_KP_Multiply), spawn $ editor)
-    , ((modm,               xK_d     ), spawn $ launcher)
-    , ((0, xK_Menu), spawn $ launcher)
-    , ((modm , xK_x     ), kill)
-    , ((modm,               xK_space ), sendMessage NextLayout)
-    , ((modm .|. shiftMask, xK_space ), setLayout $ XMonad.layoutHook conf)
-    , ((modm,               xK_Tab   ), windows W.focusDown)
-    , ((modm .|. shiftMask, xK_Tab   ), windows W.swapMaster  )
-    , ((modm,               xK_m     ), windows W.focusMaster  )
-    , ((modm, xK_j), windows W.swapDown  )
-    , ((modm, xK_k), windows W.swapUp    )
-    , ((modm,               xK_h     ), sendMessage Shrink)
-    , ((modm,               xK_l     ), sendMessage Expand)
-    , ((modm              , xK_g     ), sendMessage ToggleStruts)
-    , ((modm .|. shiftMask, xK_x     ), io (exitWith ExitSuccess))
-    , ((modm              , xK_q     ), spawn "xmonad --recompile; xmonad --restart")
-    , ((0 , xK_Print), spawn "scrot -q 1 $DATA/download/screenshot_%Y-%m-%d-%H:%M:%S.png")
-    , ((0 , 0x1008ff12), spawn "pamixer -t")
-    , ((0 , 0x1008ff11), spawn "pamixer -d 2")
-    , ((0 , 0x1008ff13), spawn "pamixer -i 2")
-    , ((0 , 0x1008ff02), spawn "xrandr --output eDP-1 --brightness 1")
-    , ((0 , 0x1008ff03), spawn "xrandr --output eDP-1 --brightness 0.5")
-    ]
-    ++
-
-    [((m .|. modm, k), windows $ f i)
-        | (i, k) <- zip (XMonad.workspaces conf) [xK_1 .. xK_9]
-        , (f, m) <- [(W.greedyView, 0), (W.shift, shiftMask)]]
-    ++
-
-    [((m .|. 0, k), windows $ f i)
-        | (i, k) <- zip (XMonad.workspaces conf) [xK_KP_End,xK_KP_Down,xK_KP_Page_Down,xK_KP_Left,xK_KP_Begin,xK_KP_Right,xK_KP_Home,xK_KP_Up,xK_KP_Page_Up]
-        , (f, m) <- [(W.greedyView, 0), (W.shift, shiftMask)]]
-    ++
-
-    [((m .|. modm, key), screenWorkspace sc >>= flip whenJust (windows . f))
-        | (key, sc) <- zip [xK_w, xK_e, xK_r] [0..]
-        , (f, m) <- [(W.view, 0), (W.shift, shiftMask)]]
-
-
-myMouseBindings (XConfig {XMonad.modMask = modm}) = M.fromList $
-
-    [ ((modm, button1), (\w -> focus w >> mouseMoveWindow w
-                                       >> windows W.shiftMaster))
-
-    , ((modm, button2), (\w -> focus w >> windows W.shiftMaster))
-
-    , ((modm, button3), (\w -> focus w >> mouseResizeWindow w
-                                       >> windows W.shiftMaster))
-    ]
-
-
-myLayout = avoidStruts $ tile ||| full
- where gaps = spacingRaw True (Border 6 6 6 6) True (Border 6 6 6 6) True 
-       tile = renamed [Replace "tile"] $ gaps $ Tall 1 (3/100) (1/2)
-       full = noBorders $ Full
-
-
-myManageHook = composeAll
-    [ className =? "Gimp"           --> doFloat
-    , className =? "mpv"           --> doFloat
-    , resource  =? "desktop_window" --> doIgnore
-    , resource  =? "kdesktop"       --> doIgnore ]
-
-myEventHook = mempty
-
-myStartupHook = mempty
+-- Clickable workspace labels
+clickable :: String -> String
+clickable ws = "<action=`xdotool key super+" ++ show i ++ "` button=1>" ++ ws ++ "</action>"
+  where
+    i = 1 + fromJust (elemIndex (strip ws) myWorkspaces)
+    strip = filter (`notElem` ("✅[]<>" :: String))
 
 main = do
- xmproc <- spawnPipe "xmobar /home/nihar/.config/xmobar/.xmobarrc"
- xmonad $ docks $ def {
-    modMask = myModMask
-  , workspaces = myWorkspaces
-  , normalBorderColor = myNormalBorderColor
-  , focusedBorderColor = myFocusedBorderColor
-  , terminal = myTerminal
-
-  , focusFollowsMouse = myFocusFollowsMouse
-  , borderWidth = myBorderWidth
-  , keys = myKeys
-  , mouseBindings = myMouseBindings
-  , layoutHook = myLayout
-  , handleEventHook = myEventHook
-  , startupHook = myStartupHook
-  , logHook = dynamicLogWithPP $ xmobarPP { ppOutput = hPutStrLn xmproc }
-  , manageHook = manageDocks <+> myManageHook
- }
+    xmproc <- spawnPipe "xmobar -x 0 ~/.config/xmobar/.xmobarrc"
+    xmonad $ docks def
+        { terminal           = myTerminal
+        , modMask            = myModMask
+        , borderWidth        = myBorderWidth
+        , focusedBorderColor = myTeal
+        , normalBorderColor  = myBase
+        , layoutHook         = myLayout
+        , startupHook        = myStartupHook
+        , workspaces         = myWorkspaces
+        , logHook = dynamicLogWithPP xmobarPP
+            { ppOutput          = hPutStrLn xmproc
+            , ppTitle           = xmobarColor myTeal "" . shorten 60
+            , ppCurrent         = xmobarColor myDark myTeal . clickable . ("✅" ++)
+            , ppVisible         = xmobarColor myTeal "" . clickable . wrap "<" ">"
+            , ppHidden          = xmobarColor myText "" . clickable
+            , ppHiddenNoWindows = const ""
+            , ppSep             = "  •  "
+            , ppWsSep           = "   "
+            , ppOrder           = \[ws, _, t] -> [ws, t]
+            }
+        }
+        `additionalKeys`
+        [ ((myModMask, xK_Return), spawn myTerminal)
+        , ((myModMask, xK_d), spawn myLauncher)
+        , ((myModMask, xK_z), spawn myBrowser)
+        , ((myModMask, xK_c), spawn myCodeEditor)
+        , ((myModMask, xK_b), spawn myBeyondCompare)
+        , ((myModMask, xK_x), kill)
+        , ((myModMask .|. controlMask, xK_x), spawn "~/powermenu")
+        , ((0, 0x1008FF13), spawn "pactl set-sink-volume @DEFAULT_SINK@ +5%")
+        , ((0, 0x1008FF11), spawn "pactl set-sink-volume @DEFAULT_SINK@ -5%")
+        , ((0, 0x1008FF12), spawn "pactl set-sink-mute @DEFAULT_SINK@ toggle")
+        , ((myModMask, xK_w), spawn "nm-connection-editor")
+        ]

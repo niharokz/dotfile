@@ -1,105 +1,82 @@
-Config { 
+Config {
+  font = "xft:FiraCode Nerd Font:size=14",
+  additionalFonts = [ "xft:FiraCode Nerd Font:style=Bold:pixelsize=14" ],
+  bgColor = "#000000",         -- Dark Teal background
+  fgColor = "#dcdccc",         -- Soft cream foreground
+  position = TopSize L 100 36, -- Top bar, full width, 36px height
+  alpha = 140,                 -- Semi-transparent
+  lowerOnStart = True,
+  hideOnStart = False,
+  allDesktops = True,
+  persistent = True,
+  border = NoBorder,
 
-   -- appearance
-     font =         "xft:Firacode:size=10:antialias=true"
-   , alpha = 205
-   , bgColor =      "black"
-   , fgColor =      "white"
-   , position =     Top
-   , border =       BottomB
-   , borderColor =  "black"
+  commands = [
 
-   -- layout
-   , sepChar =  "%"   -- delineator between plugin names and straight text
-   , alignSep = "}{"  -- separator between left-right alignment
-   -- , template = "%battery% | %multicpu% | %coretemp% | %memory% | %dynnetwork% }{ %RJTT% | %date% || %kbd% "
-   , template = "%StdinReader%}{ %multicpu% | %ntw% %dynnetwork% | %battery% | VOL : %vol% | %date%"
-   -- general behavior
-   , lowerOnStart =     True    -- send to bottom of window stack on start
-   , hideOnStart =      False   -- start with window unmapped (hidden)
-   , allDesktops =      True    -- show on all desktops
-   , overrideRedirect = True    -- set the Override Redirect flag (Xlib)
-   , pickBroadest =     False   -- choose widest display (multi-monitor)
-   , persistent =       True    -- enable/disable hiding (True = disabled)
+    -- CPU Widget
+    Run Cpu
+      [ "-t", "<fc=#33cccc> </fc><total>%"
+      , "-H", "50"
+      , "--high", "#cc6666"
+      ] 20,
 
-   -- plugins
-   --   Numbers can be automatically colored according to their value. xmobar
-   --   decides color based on a three-tier/two-cutoff system, controlled by
-   --   command options:
-   --     --Low sets the low cutoff
-   --     --High sets the high cutoff
-   --
-   --     --low sets the color below --Low cutoff
-   --     --normal sets the color between --Low and --High cutoffs
-   --     --High sets the color above --High cutoff
-   --
-   --   The --template option controls how the plugin is displayed. Text
-   --   color can be set by enclosing in <fc></fc> tags. For more details
-   --   see http://projects.haskell.org/xmobar/#system-monitor-plugins.
-   , commands = 
+    -- Memory Widget
+    Run Memory
+      [ "-t", "<fc=#66d9cc>💾 </fc><used>M"
+      ] 20,
 
-        -- weather monitor
-        [ Run Weather "RJTT" [ "--template", "<skyCondition> | <fc=#4682B4><tempC></fc>°C | <fc=#4682B4><rh></fc>% | <fc=#4682B4><pressure></fc>hPa"
-                             ] 36000
+    -- Date and Time
+    Run Date
+      "<fc=#ffffaf> </fc>%A, %d %B  <fc=#33cccc> </fc>%H:%M"
+      "date" 50,
 
-        -- network activity monitor (dynamic interface resolution)
-        , Run DynNetwork     [ "--template" , ": <rx>kB/s~<tx>kB/s"
-                             , "--Low"      , "1000"       -- units: B/s
-                             , "--High"     , "5000"       -- units: B/s
-                             , "--low"      , "green"
-                             , "--normal"   , "orange"
-                             , "--high"     , "red"
-                             ] 10
+    -- Volume Widget with Clickable Toggle
+    Run Com "sh"
+      [ "-c",
+        "VOL=$(amixer get Master | awk -F'[][]' '/%/ { print $2; exit }' | tr -d '%'); \
+        \MUTE=$(amixer get Master | awk '/\\[off\\]/'); \
+        \if [ -n \"$MUTE\" ] || [ \"$VOL\" -eq 0 ]; then \
+        \  echo '<action=`pactl set-sink-mute @DEFAULT_SINK@ toggle` button=1><fc=#cc6666>🔇 MUTE</fc></action>'; \
+        \elif [ \"$VOL\" -lt 30 ]; then \
+        \  echo '<action=`pactl set-sink-mute @DEFAULT_SINK@ toggle` button=1><fc=#ffaa00>🔈 '$VOL'%</fc></action>'; \
+        \elif [ \"$VOL\" -lt 70 ]; then \
+        \  echo '<action=`pactl set-sink-mute @DEFAULT_SINK@ toggle` button=1><fc=#ffff66>🔉 '$VOL'%</fc></action>'; \
+        \else \
+        \  echo '<action=`pactl set-sink-mute @DEFAULT_SINK@ toggle` button=1><fc=#44dddd>🔊 '$VOL'%</fc></action>'; \
+        \fi"
+      ] "volume" 10,
 
-        -- cpu activity monitor
-        , Run MultiCpu       [ "--template" , "CPU: <total0>%~<total1>%"
-                             , "--Low"      , "50"         -- units: %
-                             , "--High"     , "85"         -- units: %
-                             , "--low"      , "green"
-                             , "--normal"   , "orange"
-                             , "--high"     , "red"
-                             ] 10
+    -- Wi-Fi Widget (click to open nmtui in Kitty)
+    Run Com "sh"
+      [ "-c",
+        "nmcli -t -f DEVICE,TYPE,STATE,CONNECTION dev | \
+        \awk -F: '$2==\"wifi\"{ \
+        \if($3==\"connected\"){ \
+        \print \"<action=`kitty -e nmtui` button=1><fc=#00ffcc>󰖩 </fc><fc=#ffffff>\" $4 \"</fc></action>\" \
+        \} else { \
+        \print \"<action=`kitty -e nmtui` button=1><fc=#cc6666>󰤭 Disconnected</fc></action>\" \
+        \}'}"
+      ] "wifi" 30,
 
-        -- cpu core temperature monitor
-        , Run CoreTemp       [ "--template" , "TEM: <core0>°C|<core1>°C"
-                             , "--Low"      , "70"        -- units: °C
-                             , "--High"     , "80"        -- units: °C
-                             , "--low"      , "green"
-                             , "--normal"   , "orange"
-                             , "--high"     , "red"
-                             ] 50
-                          
-        -- memory usage monitor
-        , Run Memory         [ "--template" ,"MEM: <usedratio>%"
-                             , "--Low"      , "20"        -- units: %
-                             , "--High"     , "90"        -- units: %
-                             , "--low"      , "green"
-                             , "--normal"   , "orange"
-                             , "--high"     , "red"
-                             ] 10
+    -- Battery Widget
+    Run Battery
+      [ "-t", "<fc=#66d9cc> </fc><acstatus> <left>%"
+      , "-L", "20"
+      , "-H", "80"
+      , "--low", "#cc6666"
+      , "--normal", "#ffaa00"
+      , "--high", "#44dddd"
+      , "-a", "AC"
+      , "--"
+      , "-O", "<fc=#44dd44> Charging</fc>"
+      , "-o", "<fc=#ffaa00>  Discharging</fc>"
+      , "-i", "<fc=#66d9cc> Full</fc>"
+      ] 50,
 
-        -- battery monitor
-        , Run Battery        [ "--template" , "BAT: <acstatus>"
-                             , "--Low"      , "10"        -- units: %
-                             , "--High"     , "80"        -- units: %
-                             , "--low"      , "red"
-                             , "--normal"   , "orange"
-                             , "--high"     , "green"
+    Run UnsafeStdinReader
+  ],
 
-                             , "--" -- battery specific options
-                                       -- discharging status
-                                       , "-o"	, "<left>% (<timeleft>)"
-                                       -- AC "on" status
-                                       , "-O"	, "<fc=#dAA520>Charging</fc>"
-                                       -- charged status
-                                       , "-i"	, "<fc=#006000>Charged</fc>"
-                             ] 50
-
-        -- time and date indicator 
-        --   (%F = y-m-d date, %a = day of week, %T = h:m:s time)
-        , Run Date           "%d-%m-%Y %T" "date" 10
-	, Run StdinReader
-	, Run Com "/bin/bash" ["-c", "~/.config/xmobar/wifi"] "ntw" 10
-	, Run Com "pamixer" ["--get-volume-human"] "vol" 10
-        ]
-   }
+  sepChar = "%",
+  alignSep = "}{",
+  template = "%UnsafeStdinReader% }{ %cpu%   %memory%   %volume%   %wifi%   %battery%   %date%  "
+}

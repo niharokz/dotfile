@@ -1,0 +1,21 @@
+# Ignore compiled binary
+dwm
+
+# Ignore object files
+*.o
+
+# Ignore generated or backup config files
+config.h
+
+# Ignore manual page
+*.1
+
+# Ignore original or backup files from patches
+*.orig
+
+# Ignore editor temp/swap/backup files
+*~
+*.swp
+*.bak
+*.tmp
+

@@ -48,6 +48,9 @@ alias video='cd $DATA/video'
 alias w='cd $WORK/'
 alias work='cd $WORK/'
 
+# custom
+alias h="headerize"
+
 # archive extraction : usage: ex <file>
 ex ()
 {

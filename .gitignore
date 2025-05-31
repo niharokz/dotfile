@@ -1,4 +1,4 @@
-download
+downloads
 data
 note
 .viminfo
@@ -9,3 +9,10 @@ note
 .cache
 .vscode-oss
 .npm
+.config/git/config
+.dotnet
+.fehbg
+.profile
+.sudo_as_admin_successful
+.vscode
+.wget-hsts

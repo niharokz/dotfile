@@ -8,7 +8,7 @@
 #       ██║ ╚████║██║██║  ██║██║  ██║██║  ██║███████║
 #       ╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝╚══════╝
 #       DRAFTED BY [https://nih.ar] ON 11-05-2021.
-#       SOURCE [.zprofile] LAST MODIFIED ON 18-02-2024.
+#       SOURCE [.zprofile] LAST MODIFIED ON 31-05-2025.
 #
 
 # default programs:
