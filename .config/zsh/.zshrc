@@ -30,13 +30,16 @@ HISTSIZE=1000
 SAVEHIST=1000
 HISTFILE=~/.cache/zsh/history
 
+# Fix unknown $TERM from kitty
+[[ "$TERM" == "xterm-kitty" ]] && export TERM="xterm-256color"
+
 # Load aliases and shortcuts if existent.
 [[ $- != *i* ]] && return    
 . $XDG_CONFIG_HOME/.alias    
     
-if [[ -z $DISPLAY ]] && [[ $(tty) = /dev/tty1 ]]; then     
-    exec startx "$XDG_CONFIG_HOME/X11/xinitrc";    
-fi 
+# if [[ -z $DISPLAY ]] && [[ $(tty) = /dev/tty1 ]]; then     
+#    exec startx "$XDG_CONFIG_HOME/X11/xinitrc";    
+# fi 
 
 # Auto complete with case insenstivity
 zstyle ':completion:*' auto-description 'specify: %d'

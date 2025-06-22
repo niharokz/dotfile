@@ -1,18 +1,35 @@
+# === User folders to ignore ===
 downloads
-data
-note
+data/
+note/
+.config/_backup_unused/
+
+# === System-generated files ===
 .viminfo
-.bash_history
-.ssh
-.pki
-.local
-.cache
-.vscode-oss
-.npm
-.config/git/config
-.dotnet
 .fehbg
-.profile
-.sudo_as_admin_successful
-.vscode
 .wget-hsts
+.profile
+.lesshst
+.sudo_as_admin_successful
+.bash_history
+.bash_logout
+
+# === Secrets (DO NOT TRACK) ===
+.ssh/
+.gnupg/
+.cloudflared/
+.dotnet/
+.config/.secrets
+
+# === Cache and Temporary ===
+.cache/
+.local/
+.docker/
+.pki/
+.npm/
+.vscode/
+.vscode-oss/
+
+# === Git-specific ===
+.config/git/config
+
