@@ -127,5 +127,6 @@ source /usr/share/zsh/plugins/zsh-history-substring-search/zsh-history-substring
 export TERMINAL=kitty
 
 #gpgconf --launch gpg-agent
-neofetch
+#neofetch
+$WORK/narch/niharfetch.sh
 

@@ -51,4 +51,8 @@ export _JAVA_OPTIONS=-Djava.util.prefs.userRoot="$XDG_CONFIG_HOME"/java
 PATH="$HOME/.local/bin:$PATH"
 export npm_config_prefix="$HOME/.local"
 
+# RUST
+# . "$HOME/.local/share/cargo/env"
+export PATH="$HOME/.cargo/bin:$PATH"
+
 gpgconf --launch gpg-agent
