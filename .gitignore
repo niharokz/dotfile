@@ -16,3 +16,13 @@ note
 .sudo_as_admin_successful
 .vscode
 .wget-hsts
+.config/QtProject.conf
+.config/X11/$XDG_CACHE_HOME
+.config/go
+.config/java
+.config/microsoft-edge
+.config/tailscale
+.eteks
+.java
+.ollama
+.python_history

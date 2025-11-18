@@ -3,8 +3,8 @@ Config {
   additionalFonts = [ "xft:FiraCode Nerd Font:style=Bold:pixelsize=14" ],
   bgColor = "#000000",         -- Dark Teal background
   fgColor = "#dcdccc",         -- Soft cream foreground
-  position = TopSize L 100 36, -- Top bar, full width, 36px height
-  alpha = 140,                 -- Semi-transparent
+  position = TopSize L 100 32, -- Top bar, full width, 36px height
+  alpha = 80,                 -- Semi-transparent
   lowerOnStart = True,
   hideOnStart = False,
   allDesktops = True,

@@ -1,5 +1,3 @@
-#!/bin/bash
-
 "
 "       ███╗   ██╗██╗██╗  ██╗ █████╗ ██████╗ ███████╗
 "       ████╗  ██║██║██║  ██║██╔══██╗██╔══██╗██╔════╝
@@ -12,7 +10,7 @@
 "
 
 " GENERAL
-let mapleader =","
+let mapleader =" "
 syntax on 
 set encoding=UTF-8
 set title
@@ -86,6 +84,8 @@ map <leader>n :NERDTreeToggle<CR>
 map <leader>g :Goyo<CR>
 map <leader>b :bufdo tab split<CR>
 map <leader>o :tabnew<CR>
+nnoremap <Leader>y ggVG"+y
+nnoremap <Leader>r ggVGd"+P
 nnoremap <silent> <leader>sh :terminal<CR>
 noremap <Leader>h :<C-u>split<CR>
 noremap <Leader>v :<C-u>vsplit<CR>
@@ -105,4 +105,5 @@ set backupdir=$XDG_CACHE_HOME/vim/backup,~/,/tmp
 set undodir=$XDG_CACHE_HOME/vim/undo,~/,/tmp
 set viminfo+=n$XDG_CACHE_HOME/vim/viminfo
 
-
+" Define :Headerize command to update/add header
+command! Headerize execute '!python3 ~/data/workspace/narch/headerize.py %:p' | edit!

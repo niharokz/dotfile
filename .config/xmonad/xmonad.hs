@@ -15,18 +15,18 @@ import XMonad.Actions.CycleWS (toggleWS)
 -- Launchers & Commands
 myTerminal      = "kitty"
 myEditor        = "nvim"
-myBrowser       = "vivaldi"
+myBrowser       = "microsoft-edge-stable"
 myCodeEditor    = "code"
 myBeyondCompare = "bcompare"
 
 -- Color Palette (matches Kitty/Alacritty)
-myTeal    = "#33cccc"
+myTeal    = "#42938C"
 myDark    = "#0f2f2f"
 myBase    = "#1c1c1c"
 myText    = "#dcdccc"
 
 -- Dmenu
-myLauncher = "dmenu_run -h 36 -fn 'FiraCode Nerd Font:size=12' -nb '" ++ myDark ++ "' -nf '" ++ myText ++ "' -sb '" ++ myTeal ++ "' -sf '" ++ myDark ++ "'"
+myLauncher = "dmenu_run -h 32 -fn 'FiraCode Nerd Font:size=12' -nb '" ++ myDark ++ "' -nf '" ++ myText ++ "' -sb '" ++ myTeal ++ "' -sf '" ++ myDark ++ "'"
 
 -- XMonad basics
 myModMask     = mod4Mask -- Super key
@@ -41,7 +41,7 @@ myLayout = avoidStruts $
 -- Wallpapers, Picom, Xmobar
 myStartupHook = do
     spawn "picom --experimental-backends &"
-    spawn "feh --bg-scale ~/downloads/wal2.jpg"
+    spawn "feh --bg-scale /home/nihar/data/onedrive_nihars/Pictures/others/wallpaper/laptop/wallpaper_36.jpg"
     spawn "xmobar ~/.config/xmobar/.xmobarrc"
     setWMName "xmonad"
 
@@ -95,8 +95,9 @@ main = do
         , ((myModMask, xK_z), spawn myBrowser)
         , ((myModMask, xK_c), spawn myCodeEditor)
         , ((myModMask, xK_b), spawn myBeyondCompare)
+        , ((myModMask, xK_e), spawn "zsh /home/nihar/data/workspace/narch/editconfig.sh")
         , ((myModMask, xK_x), kill)
-        , ((myModMask .|. controlMask, xK_x), spawn "~/powermenu")
+        , ((myModMask .|. controlMask, xK_x), spawn "/home/nihar/data/workspace/narch/powermenu.sh")
         , ((0, 0x1008FF13), spawn "pactl set-sink-volume @DEFAULT_SINK@ +5%")
         , ((0, 0x1008FF11), spawn "pactl set-sink-volume @DEFAULT_SINK@ -5%")
         , ((0, 0x1008FF12), spawn "pactl set-sink-mute @DEFAULT_SINK@ toggle")

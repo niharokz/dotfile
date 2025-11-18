@@ -35,8 +35,15 @@ HISTFILE=~/.cache/zsh/history
 . $XDG_CONFIG_HOME/.alias    
     
 if [[ -z $DISPLAY ]] && [[ $(tty) = /dev/tty1 ]]; then     
-    exec startx "$XDG_CONFIG_HOME/X11/xinitrc";    
+    exec startx "$XDG_CONFIG_HOME/X11/xinitrc";
 fi 
+
+# Source all /etc/profile.d/*.sh scripts
+if [ -d /etc/profile.d ]; then
+  for script in /etc/profile.d/*.sh; do
+    [ -r "$script" ] && . "$script"
+  done
+fi
 
 # Auto complete with case insenstivity
 zstyle ':completion:*' auto-description 'specify: %d'
@@ -123,6 +130,11 @@ source /usr/share/zsh/plugins/zsh-history-substring-search/zsh-history-substring
 
 export TERMINAL=kitty
 
+export GOPATH=~/go
+export GOCACHE=~/.cache/go-build
+export PATH=$PATH:~/go/bin
+
+
 #gpgconf --launch gpg-agent
-neofetch
+macchina
 

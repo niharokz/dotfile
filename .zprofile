@@ -14,7 +14,7 @@
 # default programs:
 export EDITOR="nvim"
 export TERMINAL="alacritty"
-export BROWSER="brave"
+export BROWSER="microsoft-edge-stable"
 export READER="zathura"
 
 # XDG setup
@@ -69,3 +69,6 @@ export _JAVA_OPTIONS=-Djava.util.prefs.userRoot="$XDG_CONFIG_HOME"/java
 PATH="$HOME/.local/bin:$PATH"
 export npm_config_prefix="$HOME/.local"
 
+# AI
+export OLLAMA_MODEL_DIR="$DATA/workspace/ai/models"
+export OLLAMA_MODELS="$DATA/workspace/ai/models"
