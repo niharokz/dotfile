@@ -24,10 +24,9 @@ myTeal    = "#42938C"
 myDark    = "#0f2f2f"
 myBase    = "#1c1c1c"
 myText    = "#dcdccc"
-myBlack   = "#000000"
 
 -- Dmenu
-myLauncher = "dmenu_run -h 32 -fn 'FiraCode Nerd Font:size=12' -nb '" ++ myBlack ++ "' -nf '" ++ myTeal ++ "' -sb '" ++ myDark ++ "' -sf '" ++ myText ++ "'"
+myLauncher = "dmenu_run -h 32 -fn 'FiraCode Nerd Font:size=12' -nb '" ++ myDark ++ "' -nf '" ++ myText ++ "' -sb '" ++ myTeal ++ "' -sf '" ++ myDark ++ "'"
 
 -- XMonad basics
 myModMask     = mod4Mask -- Super key
@@ -43,7 +42,7 @@ myLayout = avoidStruts $
 myStartupHook = do
 --    spawn "picom --experimental-backends &"
     spawn "picom --config ~/.config/picom/picom.conf &"
-    spawn "feh --bg-scale $CLOUD/Photos/others/wallpaper/laptop/wallpaper_007.jpg"
+    spawn "feh --bg-scale $CLOUD/Photos/others/wallpaper/laptop/wallpaper_028.jpg"
     spawn "xmobar ~/.config/xmobar/.xmobarrc"
     setWMName "xmonad"
 
@@ -66,7 +65,7 @@ clickable :: String -> String
 clickable ws = "<action=`xdotool key super+" ++ show i ++ "` button=1>" ++ ws ++ "</action>"
   where
     i = 1 + fromJust (elemIndex (strip ws) myWorkspaces)
-    strip = filter (`notElem` ("✅[]" :: String))
+    strip = filter (`notElem` ("✅[]<>" :: String))
 
 main = do
     xmproc <- spawnPipe "xmobar -x 0 ~/.config/xmobar/.xmobarrc"
@@ -96,10 +95,9 @@ main = do
         , ((myModMask, xK_d), spawn myLauncher)
         , ((myModMask, xK_z), spawn myBrowser)
         , ((myModMask, xK_c), spawn myCodeEditor)
-        , ((myModMask, xK_b), spawn "brave-browser")
+        , ((myModMask, xK_b), spawn myBeyondCompare)
         , ((myModMask, xK_e), spawn "zsh /home/nihar/data/workspace/narch/editconfig.sh")
         , ((myModMask, xK_x), kill)
-        , ((myModMask .|. shiftMask, xK_s), spawn "flameshot gui")
         , ((myModMask .|. controlMask, xK_x), spawn "/home/nihar/data/workspace/narch/powermenu.sh")
         , ((0, 0x1008FF13), spawn "pactl set-sink-volume @DEFAULT_SINK@ +5%")
         , ((0, 0x1008FF11), spawn "pactl set-sink-volume @DEFAULT_SINK@ -5%")

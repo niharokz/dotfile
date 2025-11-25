@@ -1,28 +1,32 @@
-downloads
-data
-note
-.viminfo
+### 🔑 Sensitive/System Files
+.ssh/
+.pki/
+.Xauthority
 .bash_history
-.ssh
-.pki
-.local
-.cache
-.vscode-oss
-.npm
-.config/git/config
-.dotnet
-.fehbg
-.profile
-.sudo_as_admin_successful
-.vscode
+.zprofile
+.zshrc
+.bashrc
+
+### 💾 Cache and Local/Temporary Data
+.cache/
+.local/
+.npm/
 .wget-hsts
-.config/QtProject.conf
-.config/X11/$XDG_CACHE_HOME
-.config/go
-.config/java
-.config/microsoft-edge
-.config/tailscale
-.eteks
-.java
-.ollama
+.viminfo
 .python_history
+downloads/
+data/
+note/
+.sudo_as_admin_successful
+.fehbg
+
+### 💻 IDE/Editor/Development Environment
+.vscode/
+.vscode-oss/
+.dotnet/
+.java/
+.ollama/
+
+### ⚙️ Application-Specific Config Files 
+.config/git/config
+.config/X11/$XDG_CACHE_HOME

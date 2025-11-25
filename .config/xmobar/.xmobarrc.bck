@@ -1,0 +1,82 @@
+Config {
+  font = "xft:FiraCode Nerd Font:size=14",
+  additionalFonts = [ "xft:FiraCode Nerd Font:style=Bold:pixelsize=14" ],
+  bgColor = "#000000",         -- Dark Teal background
+  fgColor = "#dcdccc",         -- Soft cream foreground
+  position = TopSize L 100 32, -- Top bar, full width, 36px height
+  alpha = 80,                 -- Semi-transparent
+  lowerOnStart = True,
+  hideOnStart = False,
+  allDesktops = True,
+  persistent = True,
+  border = NoBorder,
+
+  commands = [
+
+    -- CPU Widget
+    Run Cpu
+      [ "-t", "<fc=#33cccc> </fc><total>%"
+      , "-H", "50"
+      , "--high", "#cc6666"
+      ] 20,
+
+    -- Memory Widget
+    Run Memory
+      [ "-t", "<fc=#66d9cc>💾 </fc><used>M"
+      ] 20,
+
+    -- Date and Time
+    Run Date
+      "<fc=#ffffaf> </fc>%A, %d %B  <fc=#33cccc> </fc>%H:%M"
+      "date" 50,
+
+    -- Volume Widget with Clickable Toggle
+    Run Com "sh"
+      [ "-c",
+        "VOL=$(amixer get Master | awk -F'[][]' '/%/ { print $2; exit }' | tr -d '%'); \
+        \MUTE=$(amixer get Master | awk '/\\[off\\]/'); \
+        \if [ -n \"$MUTE\" ] || [ \"$VOL\" -eq 0 ]; then \
+        \  echo '<action=`pactl set-sink-mute @DEFAULT_SINK@ toggle` button=1><fc=#cc6666>🔇 MUTE</fc></action>'; \
+        \elif [ \"$VOL\" -lt 30 ]; then \
+        \  echo '<action=`pactl set-sink-mute @DEFAULT_SINK@ toggle` button=1><fc=#ffaa00>🔈 '$VOL'%</fc></action>'; \
+        \elif [ \"$VOL\" -lt 70 ]; then \
+        \  echo '<action=`pactl set-sink-mute @DEFAULT_SINK@ toggle` button=1><fc=#ffff66>🔉 '$VOL'%</fc></action>'; \
+        \else \
+        \  echo '<action=`pactl set-sink-mute @DEFAULT_SINK@ toggle` button=1><fc=#44dddd>🔊 '$VOL'%</fc></action>'; \
+        \fi"
+      ] "volume" 10,
+
+    -- Wi-Fi Widget (click to open nmtui in Kitty)
+    Run Com "sh"
+      [ "-c",
+        "nmcli -t -f DEVICE,TYPE,STATE,CONNECTION dev | \
+        \awk -F: '$2==\"wifi\"{ \
+        \if($3==\"connected\"){ \
+        \print \"<action=`kitty -e nmtui` button=1><fc=#00ffcc>󰖩 </fc><fc=#ffffff>\" $4 \"</fc></action>\" \
+        \} else { \
+        \print \"<action=`kitty -e nmtui` button=1><fc=#cc6666>󰤭 Disconnected</fc></action>\" \
+        \}'}"
+      ] "wifi" 30,
+
+    -- Battery Widget
+    Run Battery
+      [ "-t", "<fc=#66d9cc> </fc><acstatus> <left>%"
+      , "-L", "20"
+      , "-H", "80"
+      , "--low", "#cc6666"
+      , "--normal", "#ffaa00"
+      , "--high", "#44dddd"
+      , "-a", "AC"
+      , "--"
+      , "-O", "<fc=#44dd44> Charging</fc>"
+      , "-o", "<fc=#ffaa00>  Discharging</fc>"
+      , "-i", "<fc=#66d9cc> Full</fc>"
+      ] 50,
+
+    Run UnsafeStdinReader
+  ],
+
+  sepChar = "%",
+  alignSep = "}{",
+  template = "%UnsafeStdinReader% }{ %cpu%   %memory%   %volume%   %wifi%   %battery%   %date%  "
+}

@@ -133,6 +133,7 @@ export TERMINAL=kitty
 export GOPATH=~/go
 export GOCACHE=~/.cache/go-build
 export PATH=$PATH:~/go/bin
+export GPG_TTY="$(tty)"
 
 
 #gpgconf --launch gpg-agent

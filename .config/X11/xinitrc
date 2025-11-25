@@ -22,6 +22,16 @@ unset GREP_OPTIONS
 #sudo plymouth quit        # manually end splash
 exec xmonad
 
+# monitor setup: DP-1 left (4K scaled 125%), eDP-1 right (1080p primary)
+if command -v xrandr >/dev/null 2>&1 && [ -n "$DISPLAY" ]; then
+  if xrandr --query | grep -q '^DP-1 connected' && xrandr --query | grep -q '^eDP-1 connected'; then
+    xrandr --output DP-1 --mode 3840x2160 --scale 0.8x0.8 --pos 0x0 \
+           --output eDP-1 --primary --mode 1920x1080 --scale 1x1 --pos 3072x0 \
+           --output DP-1 --filter nearest >/dev/null 2>&1 || true
+  fi
+fi
+
+
 ## INACTIVE
 #$WORK/narch/xsetroot.sh 2> /tmp/bar.log &
 #exec dwm
