@@ -1,71 +1,132 @@
-# Nihar's fybox Dotfiles
+# Nihar’s Dotfiles
 
-Instructions fo the dotfiles repository at <https://gitlab.com/niharokz/dotfile>.
+Dotfiles for XMonad, Xmobar, Kitty, Neovim, and related tools.  
+Runs seamlessly across **Arch Linux** and **Debian**, on multiple machines.
 
-## Introduction
+---
 
-The dotfiles in this repository are installed using a **bare Git repository**. 
-This method does not use symlinks (like most other dotfile repositories).
+## 📦 Requirements
 
-After the installation, all the dotfiles will be physically present in your home folder, yet, 
-you will still have them under full version control.
+Install these before checkout:
 
-## Look and Feel
+### Core
+- xmonad
+- xmonad-contrib
+- xmobar
+- kitty
+- neovim
+- picom
+- feh
+- dmenu
+- xdotool
 
-![Screenshot](.config/screenshot.webp "screenshot")
+### Extras
+- flameshot
+- pactl (PulseAudio)
+- nm-connection-editor
+- brave-browser or microsoft-edge-stable
 
-## Usage
+### Fonts
+- FiraCode Nerd Font  
+- Font Awesome (for xmobar icons)
 
-Now all the dotfiles from the repository are installed in your home directory. 
-However, as mentioned, you still have them under full version control via the bare Git repository in `~/.dotfiles`.
+---
 
-To interact with the bare Git repository, you need the following alias:
+## 🐧 Installation
 
-~~~bash
-dot='/usr/bin/git --git-dir=$HOME/.config/.dotfile --work-tree=$HOME'
-~~~
+### Arch Linux
+\`\`\`bash
+sudo pacman -S xmonad xmonad-contrib xmobar kitty neovim picom feh dmenu xdotool flameshot pulseaudio
+\`\`\`
 
+### Debian / Ubuntu
+\`\`\`bash
+sudo apt install xmonad libghc-xmonad-contrib-dev xmobar kitty neovim picom feh dmenu xdotool flameshot pulseaudio
+\`\`\`
 
-Note: the [`.alias`](https://gitlab.com/niharokz/dotfile/.config/.alias) file in the dotfiles repository already contains this alias, so you're good to go.
+---
 
-With the `dot` alias, you can now manage the dotfiles via the bare Git repository, just as you would with the `git` command:
+## 🚀 Fresh Install
 
-Edited your dotfiles? No problem, commit and push the changes:
+Clone the repo as a **bare repository**:
 
-~~~bash
-dot add ~/.vimrc
-dot commit -m "Edit .vimrc"
-dot push
-~~~
+\`\`\`bash
+git clone --bare git@gitlab.com:niharokz/dotfile.git \$HOME/.config/.dotfile
+\`\`\`
 
-Pushed changes to the remote repository from another machine? Easy, just pull down the new version:
+Define the alias:
 
-~~~bash
-dot pull
-~~~
+\`\`\`bash
+alias dot='/usr/bin/git --git-dir=\$HOME/.config/.dotfile --work-tree=\$HOME'
+\`\`\`
 
-Want to know what's going on?
+Checkout the files:
 
-~~~bash
-dot status
-~~~
-
-Don't want to see untracked files:
-
-~~~bash
-dot config status.showUntrackedFiles no
-~~~
-
-## Checkout
-While installing dot files in a new system:
-~~~bash
-git clone --bare git@gitlab.com:niharokz/dotfile.git $HOME/.config/.dotfile
-dot='/usr/bin/git --git-dir=$HOME/.config/.dotfile --work-tree=$HOME'
+\`\`\`bash
 dot checkout
-~~~
+\`\`\`
 
-## References
+Hide untracked files:
 
-Using a bare Git repository is described here:
+\`\`\`bash
+dot config status.showUntrackedFiles no
+\`\`\`
 
-- <https://developer.atlassian.com/blog/2016/02/best-way-to-store-dotfiles-git-bare-repo/>
+---
+
+## 🔄 Reinstall / Migration
+
+Remove old configs:
+
+\`\`\`bash
+rm -rf ~/.config/xmonad ~/.config/xmobar ~/.config/kitty ~/.config/nvim
+\`\`\`
+
+Re-run the checkout steps above.
+
+Reinstall fonts (Nerd Fonts + Font Awesome), then refresh:
+
+\`\`\`bash
+fc-cache -fv
+\`\`\`
+
+---
+
+## ⚙️ Post-Install Checklist
+
+Fonts – Verify icons render in xmobar:
+\`\`\`bash
+fc-list | grep Nerd
+fc-list | grep Awesome
+\`\`\`
+
+Xmobar – Ensure %UnsafeStdinReader% is present in .xmobarrc.
+
+Wallpaper – Update the feh line in xmonad.hs to your preferred path.
+
+Volume Keys – Adjust multimedia key mappings if hardware differs.
+
+Network – Use:
+\`\`\`bash
+nm-connection-editor
+\`\`\`
+or
+\`\`\`bash
+nmtui
+\`\`\`
+
+---
+
+## 📝 Notes
+
+- Works on both Arch and Debian  
+- Configs are modular — managed via the bare Git repo (dot alias)  
+- Scratchpads, gaps, spacing, and workspace icons are pre-configured  
+
+---
+
+## 📚 References
+
+https://developer.atlassian.com/blog/2016/02/best-way-to-store-dotfiles-git-bare-repo/
+EOF
+

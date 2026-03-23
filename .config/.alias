@@ -6,83 +6,101 @@
 #       ██║ ╚████║██║██║  ██║██║  ██║██║  ██║███████║
 #       ╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝╚══════╝
 #       DRAFTED BY [https://nih.ar] ON 30-09-2020.
-#       SOURCE [.alias] LAST MODIFIED ON 02-03-2026
+#       SOURCE [.alias] LAST MODIFIED ON 23-03-2026
 #
 
 # Load secrets (if exists)
-[[ -f "$XDG_CONFIG_HOME/.secrets" ]] && . "$XDG_CONFIG_HOME/.secrets"
+[[ -f "$XDG_CONFIG_HOME/.secrets" ]] && source "$XDG_CONFIG_HOME/.secrets"
 
 ### ────────────────────────────
 ### 🔧 Command Shortcuts
 
 alias c='clear'
+alias g='git'
+alias v='nvim'
+alias vi='nvim'
+alias f='fzf'
+alias l='exa -lars date'
+alias home='cd ~'
+alias ports='sudo lsof -i -P -n | grep LISTEN'
+
+### ────────────────────────────
+### 🐳 Docker
+
 alias d='docker'
 alias dc='docker compose'
 alias dprune='docker system prune -f'
 
-alias g='git'
-alias home='cd ~'
-alias l='exa -lars date'
-alias v='nvim'
-alias vi='nvim'
-alias f='fzf'
-alias ports='sudo lsof -i -P -n | grep LISTEN'
-
 ### ────────────────────────────
-### 📁 Directory Helpers (Safe Functions)
+### 📁 Navigation (FIXED)
 
 data() { cd "$DATA" || return; }
-dod() { cd "$DATA/docker" || return; }
-w()    { cd "$WORK" || return; }
+work() { cd "$WORK" || return; }
+notes() { cd "$NOTES" || return; }
+dockerdir() { cd "$DATAR/docker" || return; }
+
+# short aliases
+alias w='work'
+alias n='notes'
+alias dod='dockerdir'
 
 ### ────────────────────────────
 ### 🐳 Docker Helpers
 
-dr()        { dc down && dc up -d; }
-dbr()       { dc down && dc build --no-cache && dc up -d; }
-dlogs()     { dc logs -f; }
-dps()       { dc ps; }
-drestart()  { dc restart; }
-dp() { docker exec -it postgres psql -U nhr26 -d nihardb; }
+dr() { dc down && dc up -d; }
+dbr() { dc down && dc build --no-cache && dc up -d; }
+dlogs() { dc logs -f; }
+dps() { dc ps; }
+drestart() { dc restart; }
+
+dp() {
+  docker exec -it postgres psql -U nhr26 -d nihardb
+}
 
 ### ────────────────────────────
-### 🧠 Dotfiles & Dev
+### 🧠 Dev / Dotfiles
 
 alias dot='/usr/bin/git --git-dir=$HOME/.config/.dotfile --work-tree=$HOME'
+
 alias pywork='source "$WORK/pyenv/bin/activate"'
 alias vih='$WORK/narch/header.sh'
 alias h='$WORK/narch/headerize.py'
 alias nf='$WORK/narch/niharfetch.sh'
 
+alias o='docker exec -it nimos_ollama ollama'
+alias ol='o list'
+alias op='o pull'
+alias or='o run'
+
 ### ────────────────────────────
-### 🗂 Safer Move to /tmp
+### 🗂 Safe Move (instead of delete)
 
 rmv() {
   mv -i "$@" /tmp/
 }
 
 ### ────────────────────────────
-### 📦 Archive Extractor
+### 📦 Extract Anything
 
 ex() {
   [[ -z "$1" ]] && { echo "Usage: ex <file>"; return 1; }
   [[ ! -f "$1" ]] && { echo "'$1' is not a valid file"; return 1; }
 
   case "$1" in
-    *.tar.bz2)   tar xjf "$1" ;;
-    *.tar.gz)    tar xzf "$1" ;;
-    *.bz2)       bunzip2 "$1" ;;
-    *.rar)       unrar x "$1" ;;
-    *.gz)        gunzip "$1" ;;
-    *.tar)       tar xf "$1" ;;
-    *.tbz2)      tar xjf "$1" ;;
-    *.tgz)       tar xzf "$1" ;;
-    *.zip)       unzip "$1" ;;
-    *.Z)         uncompress "$1" ;;
-    *.7z)        7z x "$1" ;;
-    *.deb)       ar x "$1" ;;
-    *.tar.xz)    tar xf "$1" ;;
-    *.tar.zst)   unzstd "$1" ;;
-    *)           echo "'$1' cannot be extracted via ex()" ;;
+    *.tar.bz2) tar xjf "$1" ;;
+    *.tar.gz)  tar xzf "$1" ;;
+    *.bz2)     bunzip2 "$1" ;;
+    *.rar)     unrar x "$1" ;;
+    *.gz)      gunzip "$1" ;;
+    *.tar)     tar xf "$1" ;;
+    *.tbz2)    tar xjf "$1" ;;
+    *.tgz)     tar xzf "$1" ;;
+    *.zip)     unzip "$1" ;;
+    *.Z)       uncompress "$1" ;;
+    *.7z)      7z x "$1" ;;
+    *.deb)     ar x "$1" ;;
+    *.tar.xz)  tar xf "$1" ;;
+    *.tar.zst) unzstd "$1" ;;
+    *)         echo "'$1' cannot be extracted via ex()" ;;
   esac
 }
