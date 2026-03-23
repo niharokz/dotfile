@@ -50,15 +50,15 @@ myStartupHook = do
 -- Workspaces (with icons)
 myWorkspaces :: [String]
 myWorkspaces =
-  [ "🏠 home"
-  , "🌐 web"
-  , "💻 dev"
-  , "📝 edit"
-  , "🗂 files"
-  , "🎞 media"
-  , "📄 docs"
-  , "🖥 term"
-  , "📬 mail"
+  [ "🗿 1"
+  , "💀 2"  
+  , "📡 3"
+  , "🐶 4"
+  , "💐 5"
+  , "⏳ 6"
+  , "🔥 7"
+  , "🍃 8"
+  , "🗼 9"
   ]
 
 -- Clickable workspace labels

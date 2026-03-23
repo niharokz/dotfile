@@ -63,6 +63,10 @@ if ! pgrep -u "$USER" ssh-agent >/dev/null; then
 fi
 [[ -z "$SSH_AUTH_SOCK" ]] && source "$XDG_RUNTIME_DIR/ssh-agent.env" 2>/dev/null
 
+### GNUPG GPG ###############################################################
+export GNUPGHOME="$HOME/.config/gnupg"
+export GPG_TTY="$(tty)"
+
 ### Java XDG Fix ############################################################
 export _JAVA_OPTIONS="-Djava.util.prefs.userRoot=$XDG_CONFIG_HOME/java"
 

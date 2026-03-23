@@ -15,7 +15,7 @@ Config {
 
     -- CPU Widget
     Run Cpu
-      [ "-t", "<fc=#33cccc> </fc><total>%"
+      [ "-t", "<fc=#33cccc>  </fc><total>%"
       , "-H", "50"
       , "--high", "#cc6666"
       ] 20,
@@ -52,9 +52,9 @@ Config {
         "nmcli -t -f DEVICE,TYPE,STATE,CONNECTION dev | \
         \awk -F: '$2==\"wifi\"{ \
         \if($3==\"connected\"){ \
-        \print \"<action=`kitty -e nmtui` button=1><fc=#00ffcc>󰖩 </fc><fc=#ffffff>\" $4 \"</fc></action>\" \
+        \print \"<action=`kitty -e nmtui` button=1><fc=#00ffcc>🌐 </fc><fc=#ffffff>\" $4 \"</fc></action>\" \
         \} else { \
-        \print \"<action=`kitty -e nmtui` button=1><fc=#cc6666>󰤭 Disconnected</fc></action>\" \
+        \print \"<action=`kitty -e nmtui` button=1><fc=#cc6666>⛔ Disconnected</fc></action>\" \
         \}'}"
       ] "wifi" 30,
 
