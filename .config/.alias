@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/zsh
 
 #
 #       ███╗   ██╗██╗██╗  ██╗ █████╗ ██████╗ ███████╗
@@ -8,46 +8,86 @@
 #       ██║ ╚████║██║██║  ██║██║  ██║██║  ██║███████║
 #       ╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝╚══════╝
 #       DRAFTED BY [https://nih.ar] ON 30-09-2020.
-#       SOURCE [.alias] LAST MODIFIED ON 01-06-2025.
+#       SOURCE [.alias] LAST MODIFIED ON 23-03-2026
 #
 
-# Ensure environment variables are set
-# Assumes $DATA, $WORK, $XDG_CONFIG_HOME, $XDG_DATA_HOME are defined in ~/.secrets or elsewhere
-[[ -f "$XDG_CONFIG_HOME/.secrets" ]] && . "$XDG_CONFIG_HOME/.secrets"
+# Load secrets (if exists)
+[[ -f "$XDG_CONFIG_HOME/.secrets" ]] && source "$XDG_CONFIG_HOME/.secrets"
 
-# Common aliases (work on any system)
+
+### ────────────────────────────
+### 🔧 Command Shortcuts
+
 alias c='clear'
 alias g='git'
-alias l='exa -lars date'  # Note: exa must be installed on Debian
-alias nf='neofetch'
-alias m="macchina"
-alias rmv='mv -t /tmp'
 alias v='nvim'
 alias vi='nvim'
-alias yt='yt-dlp'  # Consider replacing with yt-dlp, as youtube-dl is outdated
+alias f='fzf'
+alias l='exa -lars date'
+alias home='cd ~'
+alias ports='sudo lsof -i -P -n | grep LISTEN'
+alias s='sudo'
+
+#alias nf='neofetch'
+alias m='macchina'
+
+alias yt='yt-dlp'
+alias yta='yt -x -f bestaudio/best --add-metadata -o "%(title)s.%(ext)s"'
+
 alias code='code --extensions-dir "$XDG_DATA_HOME/vscode"'
 alias dot='/usr/bin/git --git-dir=$HOME/.config/.dotfile --work-tree=$HOME'
-alias odupload='rclone -v sync $DATA/onedrive_nihars onedrive:'
-alias oddownload='rclone -v sync onedrive: $DATA/onedrive_nihars'
-alias pyenv='source $WORK/pyenv/bin/activate'
-alias tv='xrandr --output HDMI-1 --auto --left-of eDP-1 --mode 1920x1080'
-alias yta='yt -x -f bestaudio/best --add-metadata -o "%(title)s.%(ext)s"'
-alias h='python3 /home/nihar/data/workspace/narch/headerize.py'
+
 alias z='nvim $(fzf -m --preview="batcat --color=always {}")'
 
-# Shortcut path aliases
+
+### ────────────────────────────
+### 🐳 Docker
+
+alias d='docker'
+alias dc='docker compose'
+alias dprune='docker system prune -f'
+
+dr() { dc down && dc up -d; }
+dbr() { dc down && dc build --no-cache && dc up -d; }
+dlogs() { dc logs -f; }
+dps() { dc ps; }
+drestart() { dc restart; }
+
+
+### ────────────────────────────
+### 📁 Navigation
+
 alias b='cd $DATA/backup'
-alias d='cd $DATA'
+alias ddata='cd $DATA'
 alias data='cd $DATA'
 alias fybo='cd $WORK/fybo'
-alias home='cd $HOME'
-alias n="cd $CLOUD"
-alias note='cd $DATA/cloud/dropbox/notes'
 alias narch='cd $WORK/narch'
 alias nhr='cd $WORK/nih.ar'
 alias video='cd $DATA/video'
-alias w='cd $WORK/'
-alias work='cd $WORK/'
+alias w='cd $WORK'
+alias work='cd $WORK'
+alias n='cd $DATA/notes'
+alias note='cd $DATA/notes'
+
+
+### ────────────────────────────
+### 🧠 Dev / Dotfiles
+
+alias pyenv='source $WORK/pyenv/bin/activate'
+alias h='python3 $WORK/narch/headerize.py'
+
+### ────────────────────────────
+### ⚡ Narch Short Aliases
+
+alias rmv='safe_move'
+alias ex='extract_archive'
+alias t='create_backup'
+alias tr='extract_tar'
+alias nf='$WORK/narch/niharfetch.sh'
+
+
+### ────────────────────────────
+### 📦 System / Package Helpers
 
 # Detect distribution
 if [ -f /etc/os-release ]; then
@@ -57,55 +97,18 @@ else
   DISTRO="unknown"
 fi
 
-# Arch-specific aliases
+# Arch
 if [ "$DISTRO" = "arch" ]; then
   alias yay='paru'
   alias nay='paru -Rns'
 fi
 
-# Debian-specific aliases
+# Debian
 if [ "$DISTRO" = "debian" ]; then
   alias apt='sudo apt'
   alias nay='sudo apt remove --purge'
-  alias update='sudo apt update && sudo apt upgrade'
+  alias update='sudo apt update && sudo apt upgrade && sudo apt autoremove'
 fi
 
-# Archive extraction: usage: ex <file>
-ex() {
-  if [ -f "$1" ]; then
-    case "$1" in
-      *.tar.bz2)  tar xjf "$1"   ;;
-      *.tar.gz)   tar xzf "$1"   ;;
-      *.bz2)      bunzip2 "$1"   ;;
-      *.rar)      unrar x "$1"   ;;
-      *.gz)       gunzip "$1"    ;;
-      *.tar)      tar xf "$1"    ;;
-      *.tbz2)     tar xjf "$1"   ;;
-      *.tgz)      tar xzf "$1"   ;;
-      *.zip)      unzip "$1"     ;;
-      *.Z)        uncompress "$1";;
-      *.7z)       7z x "$1"      ;;
-      *.deb)      ar x "$1"      ;;
-      *.tar.xz)   tar xf "$1"    ;;
-      *.tar.zst)  unzstd "$1"    ;;
-      *)          echo "'$1' cannot be extracted via ex()" ;;
-    esac
-  else
-    echo "'$1' is not a valid file"
-  fi
-}
-
-check_packages() {
-    echo "APT packages     : $(dpkg -l | grep ^ii | wc -l)"
-    echo "Cargo packages   : $(cargo install --list | grep ' v' | wc -l)"
-    echo "Go packages      : $(ls $(go env GOPATH)/bin 2>/dev/null | wc -l)"
-    echo "Python (user)    : $(pip list --user | wc -l)"
-    echo "Python (system)  : $(pip list | wc -l)"
-    echo "Ruby gems        : $(gem list | wc -l)"
-    echo "npm (global)     : $(npm list -g --depth=0 2>/dev/null | grep '──' | wc -l)"
-    echo "Flatpak apps     : $(flatpak list 2>/dev/null | wc -l)"
-    echo "Snap packages    : $(snap list 2>/dev/null | wc -l)"
-}
-
-# Interactive shell check
+# Only run in interactive shell
 [[ $- != *i* ]] && return

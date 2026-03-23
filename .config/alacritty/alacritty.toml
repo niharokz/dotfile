@@ -1,30 +1,40 @@
 [env]
 TERM = "alacritty"
 
+### ────────────────────────────
+### 🪟 Window
+
 [window]
 title = "Alacritty"
 dynamic_title = true
-opacity = 0.88
+opacity = 0.55
 decorations = "full"
 
 [window.padding]
 x = 8
 y = 8
 
+### ────────────────────────────
+### 🔤 Font
+
 [font]
-size = 7.0
+size = 9.0
 
 [font.normal]
-family = "FiraCode Nerd Font"
+# family = "FiraCode Nerd Font"
+family = "Fira Code"
 style = "Regular"
 
 [font.bold]
-family = "FiraCode Nerd Font"
+family = "Fira Code"
 style = "Bold"
 
 [font.italic]
-family = "FiraCode Nerd Font"
+family = "Fira Code"
 style = "Italic"
+
+### ────────────────────────────
+### 🎨 Colors (from kitty)
 
 [colors.primary]
 background = "#000000"
@@ -58,18 +68,30 @@ magenta = "#66d9cc"
 cyan    = "#00ffff"
 white   = "#ffffff"
 
+### ────────────────────────────
+### 🖱 Cursor
+
 [cursor]
-style = "Beam"
+style = { shape = "Beam", blinking = "Off" }
 unfocused_hollow = true
+
+### ────────────────────────────
+### 🔔 Bell
 
 [bell]
 animation = "EaseOutExpo"
 color = "#ffffff"
 duration = 0
 
+### ────────────────────────────
+### 📜 Scrolling
+
 [scrolling]
 history = 10000
 multiplier = 3
+
+### ────────────────────────────
+### 📋 Selection
 
 [selection]
 save_to_clipboard = true

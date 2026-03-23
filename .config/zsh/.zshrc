@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/zsh
 
 #
 #       ███╗   ██╗██╗██╗  ██╗ █████╗ ██████╗ ███████╗
@@ -8,134 +8,149 @@
 #       ██║ ╚████║██║██║  ██║██║  ██║██║  ██║███████║
 #       ╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝╚══════╝
 #       DRAFTED BY [https://nih.ar] ON 30-10-2020.
-#       SOURCE [.zshrc] LAST MODIFIED ON 18-02-2024.
+#       SOURCE [.zshrc] LAST MODIFIED ON 23-03-2026.
 #
 
-autoload -U colors && colors	# Load colors
-PS1="%B%{$fg[red]%}[%{$fg[yellow]%}%n%{$fg[green]%}@%{$fg[blue]%}%M %{$fg[magenta]%}%~%{$fg[red]%}]%{$reset_color%}$%b "
+### ────────────────────────────
+### 🧠 Shell Basics
+
+autoload -U colors && colors
+setopt autocd
+stty stop undef
+
+### ────────────────────────────
+### 🎨 Prompt (with git)
 
 autoload -Uz vcs_info
 precmd_vcs_info() { vcs_info }
 precmd_functions+=( precmd_vcs_info )
+
 setopt prompt_subst
+
+PS1="%B%{$fg[red]%}[%{$fg[yellow]%}%n%{$fg[green]%}@%{$fg[blue]%}%M %{$fg[magenta]%}%~%{$fg[red]%}]%{$reset_color%}$%b "
 RPROMPT=\$vcs_info_msg_0_
+
 zstyle ':vcs_info:git:*' formats '%F{30}(%b)%r%f'
 zstyle ':vcs_info:*' enable git
 
-setopt autocd		# Automatically cd into typed directory.
-stty stop undef		# Disable ctrl-s to freeze terminal.
+### ────────────────────────────
+### 🗂 History
 
-# History in cache directory:
 HISTSIZE=1000
 SAVEHIST=1000
-HISTFILE=~/.cache/zsh/history
+HISTFILE="$XDG_DATA_HOME/zsh/history"
 
-# Load aliases and shortcuts if existent.
-[[ $- != *i* ]] && return    
-. $XDG_CONFIG_HOME/.alias    
-    
-if [[ -z $DISPLAY ]] && [[ $(tty) = /dev/tty1 ]]; then     
-    exec startx "$XDG_CONFIG_HOME/X11/xinitrc";
-fi 
+### ────────────────────────────
+### ⚡ Load Custom Layer (IMPORTANT ORDER)
 
-# Source all /etc/profile.d/*.sh scripts
+[[ $- != *i* ]] && return
+
+# Load functions FIRST (uses env like $WORK)
+[ -f "$WORK/narch/shellfunctions.sh" ] && source "$WORK/narch/shellfunctions.sh"
+
+# Then aliases
+[ -f "$XDG_CONFIG_HOME/.alias" ] && source "$XDG_CONFIG_HOME/.alias"
+
+### ────────────────────────────
+### 🖥️ Auto Start X (TTY1)
+
+if [[ -z $DISPLAY ]] && [[ $(tty) = /dev/tty1 ]]; then
+  exec startx "$XDG_CONFIG_HOME/X11/xinitrc"
+fi
+
+### ────────────────────────────
+### 📦 System Profiles
+
 if [ -d /etc/profile.d ]; then
   for script in /etc/profile.d/*.sh; do
     [ -r "$script" ] && . "$script"
   done
 fi
 
-# Auto complete with case insenstivity
-zstyle ':completion:*' auto-description 'specify: %d'
-zstyle ':completion:*' completer _expand _complete _correct _approximate
-zstyle ':completion:*' group-name ''
-zstyle ':completion:*' menu select=2
-eval "$(dircolors -b)"
-zstyle ':completion:*:default' list-colors ${(s.:.)LS_COLORS}
-zstyle ':completion:*' list-colors ''
-zstyle ':completion:*' list-prompt %SAt %p: Hit TAB for more, or the character to insert%s
-zstyle ':completion:*' matcher-list '' 'm:{a-z}={A-Z}' 'm:{a-zA-Z}={A-Za-z}' 'r:|[._-]=* r:|=* l:|=*'
-zstyle ':completion:*' menu select=long
-zstyle ':completion:*' select-prompt %SScrolling active: current selection at %p%s
-zstyle ':completion:*' use-compctl false
-zstyle ':completion:*' verbose true
-zstyle ':completion:*:*:kill:*:processes' list-colors '=(#b) #([0-9]#)*=0=01;31'
-zstyle ':completion:*:kill:*' command 'ps -u $USER -o pid,%cpu,tty,cputime,cmd'
+### ────────────────────────────
+### 🔍 Completion
 
 autoload -U compinit
-zstyle ':completion:*' menu select
 zmodload zsh/complist
 compinit
-_comp_options+=(globdots)		# Include hidden files.
+_comp_options+=(globdots)
 
-# vi mode
+zstyle ':completion:*' menu select
+zstyle ':completion:*' matcher-list '' 'm:{a-z}={A-Z}'
+eval "$(dircolors -b)"
+
+### ────────────────────────────
+### ⌨️ Keybindings (Vim Style)
+
 bindkey -v
 export KEYTIMEOUT=1
 
-# Use vim keys in tab complete menu:
 bindkey -M menuselect 'h' vi-backward-char
+bindkey -M menuselect 'j' vi-down-line-or-history
 bindkey -M menuselect 'k' vi-up-line-or-history
 bindkey -M menuselect 'l' vi-forward-char
-bindkey -M menuselect 'j' vi-down-line-or-history
-bindkey -v '^?' backward-delete-char
+bindkey '^?' backward-delete-char
 
-# Change cursor shape for different vi modes.
-function zle-keymap-select {
-  if [[ ${KEYMAP} == vicmd ]] ||
-     [[ $1 = 'block' ]]; then
+### ────────────────────────────
+### 🖱️ Cursor Behavior
+
+zle-keymap-select() {
+  if [[ ${KEYMAP} == vicmd ]]; then
     echo -ne '\e[1 q'
-  elif [[ ${KEYMAP} == main ]] ||
-       [[ ${KEYMAP} == viins ]] ||
-       [[ ${KEYMAP} = '' ]] ||
-       [[ $1 = 'beam' ]]; then
+  else
     echo -ne '\e[5 q'
   fi
 }
 zle -N zle-keymap-select
+
 zle-line-init() {
-    zle -K viins # initiate `vi insert` as keymap (can be removed if `bindkey -V` has been set elsewhere)
-    echo -ne "\e[5 q"
+  zle -K viins
+  echo -ne "\e[5 q"
 }
 zle -N zle-line-init
-echo -ne '\e[5 q' # Use beam shape cursor on startup.
-preexec() { echo -ne '\e[5 q' ;} # Use beam shape cursor for each new prompt.
 
-# Use lf to switch directories and bind it to ctrl-o
-lfcd () {
-    tmp="$(mktemp)"
-    lf -last-dir-path="$tmp" "$@"
-    if [ -f "$tmp" ]; then
-        dir="$(cat "$tmp")"
-        rm -f "$tmp" >/dev/null
-        [ -d "$dir" ] && [ "$dir" != "$(pwd)" ] && cd "$dir"
-    fi
+preexec() { echo -ne '\e[5 q'; }
+
+### ────────────────────────────
+### 📁 Tools
+
+lfcd() {
+  tmp="$(mktemp)"
+  lf -last-dir-path="$tmp" "$@"
+  if [ -f "$tmp" ]; then
+    dir="$(cat "$tmp")"
+    rm -f "$tmp"
+    [ -d "$dir" ] && cd "$dir"
+  fi
 }
+
 bindkey -s '^o' 'lfcd\n'
-
 bindkey -s '^a' 'bc -l\n'
-
 bindkey -s '^f' 'cd "$(dirname "$(fzf)")"\n'
-
 bindkey '^[[P' delete-char
 
-# Edit line in vim with ctrl-e:
-autoload edit-command-line; zle -N edit-command-line
+autoload edit-command-line
+zle -N edit-command-line
 bindkey '^e' edit-command-line
 
-# Load zsh-syntax-highlighting
+### ────────────────────────────
+### 🔌 Plugins
+
 source /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh 2>/dev/null
 source /usr/share/zsh/plugins/zsh-you-should-use/you-should-use.plugin.zsh 2>/dev/null
 source /usr/share/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh 2>/dev/null
 source /usr/share/zsh/plugins/zsh-history-substring-search/zsh-history-substring-search.zsh 2>/dev/null
 
-export TERMINAL=kitty
+### ────────────────────────────
+### 🛠 Dev Environment
 
-export GOPATH=~/go
-export GOCACHE=~/.cache/go-build
-export PATH=$PATH:~/go/bin
+export GOPATH="$HOME/go"
+export GOCACHE="$XDG_CACHE_HOME/go-build"
+export PATH="$PATH:$GOPATH/bin"
+
 export GPG_TTY="$(tty)"
 
+### ────────────────────────────
+### ⚡ Startup
 
-#gpgconf --launch gpg-agent
 macchina
-

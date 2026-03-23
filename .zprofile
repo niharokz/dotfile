@@ -1,4 +1,4 @@
-#!/usr/bin/env zsh
+#!/bin/zsh
 
 #
 #       ███╗   ██╗██╗██╗  ██╗ █████╗ ██████╗ ███████╗
@@ -11,7 +11,9 @@
 #       SOURCE [.zprofile] LAST MODIFIED ON 31-05-2025.
 #
 
-### Default Programs #######################################################
+### ────────────────────────────
+### 🧠 Default Programs
+
 export EDITOR="nvim"
 export TERMINAL="alacritty"
 export BROWSER="microsoft-edge-stable"
@@ -44,7 +46,7 @@ export PATH="$HOME/.local/bin:$PATH"
 
 ### Custom Shortcuts ########################################################
 export CLOUD="$DATA/nextcloud"
-export BACKUP="$HOME/backup"
+export BACKUP="$DATA/backup"
 export WORK="$DATA/workspace/"
 export ZDOTDIR="$HOME/.config/zsh"
 

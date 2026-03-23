@@ -1,4 +1,15 @@
 #!/bin/bash
+ 
+#
+#       ███╗   ██╗██╗██╗  ██╗ █████╗ ██████╗ ███████╗
+#       ████╗  ██║██║██║  ██║██╔══██╗██╔══██╗██╔════╝
+#       ██╔██╗ ██║██║███████║███████║██████╔╝███████╗
+#       ██║╚██╗██║██║██╔══██║██╔══██║██╔══██╗╚════██║
+#       ██║ ╚████║██║██║  ██║██║  ██║██║  ██║███████║
+#       ╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝╚══════╝
+#       DRAFTED BY [https://nih.ar] ON 23-03-2026
+#       SOURCE [xinitrc] LAST MODIFIED ON 23-03-2026
+#
 
 #
 #       ███╗   ██╗██╗██╗  ██╗ █████╗ ██████╗ ███████╗
@@ -11,30 +22,44 @@
 #       SOURCE [xinitrc] LAST MODIFIED ON 27-06-2021.
 #
 
-if [ -d /etc/X11/xinit/xinitrc.d ] ; then
- for f in /etc/X11/xinit/xinitrc.d/?*.sh ; do
-  [ -x "$f" ] && . "$f"
- done
- unset f
+### ────────────────────────────
+### 🧠 System Init
+
+if [ -d /etc/X11/xinit/xinitrc.d ]; then
+  for f in /etc/X11/xinit/xinitrc.d/?*.sh; do
+    [ -x "$f" ] && . "$f"
+  done
+  unset f
 fi
 
 unset GREP_OPTIONS
-#sudo plymouth quit        # manually end splash
-exec xmonad
 
-# monitor setup: DP-1 left (4K scaled 125%), eDP-1 right (1080p primary)
+
+### ────────────────────────────
+### 🖥️ Display / Monitor Setup
+
 if command -v xrandr >/dev/null 2>&1 && [ -n "$DISPLAY" ]; then
-  if xrandr --query | grep -q '^DP-1 connected' && xrandr --query | grep -q '^eDP-1 connected'; then
-    xrandr --output DP-1 --mode 3840x2160 --scale 0.8x0.8 --pos 0x0 \
-           --output eDP-1 --primary --mode 1920x1080 --scale 1x1 --pos 3072x0 \
-           --output DP-1 --filter nearest >/dev/null 2>&1 || true
+
+  XR="$(xrandr)"
+
+  ### Dual Monitor: DP-1 (LEFT) + eDP-1 (RIGHT)
+  if echo "$XR" | grep -q '^DP-1 connected' && echo "$XR" | grep -q '^eDP-1 connected'; then
+
+    xrandr \
+      --output DP-1  --mode 3840x2160 --scale 0.8x0.8 --pos 0x0 --filter nearest \
+      --output eDP-1 --primary --mode 1920x1080 --scale 1x1 --right-of DP-1
+
+  ### Fallback: Laptop Only
+  elif echo "$XR" | grep -q '^eDP-1 connected'; then
+
+    xrandr --output eDP-1 --auto --primary
+
   fi
+
 fi
 
 
-## INACTIVE
-#$WORK/narch/xsetroot.sh 2> /tmp/bar.log &
-#exec dwm
-#export XDG_SESSION_TYPE=x11
-#export GDK_BACKEND=x11
-#exec gnome-session
+### ────────────────────────────
+### 🚀 Window Manager
+
+exec xmonad
