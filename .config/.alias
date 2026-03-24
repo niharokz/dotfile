@@ -12,6 +12,7 @@
 # Load secrets (if exists)
 [[ -f "$XDG_CONFIG_HOME/.secrets" ]] && source "$XDG_CONFIG_HOME/.secrets"
 
+
 ### ────────────────────────────
 ### 🔧 Command Shortcuts
 
@@ -23,6 +24,8 @@ alias f='fzf'
 alias l='exa -lars date'
 alias home='cd ~'
 alias ports='sudo lsof -i -P -n | grep LISTEN'
+alias s='sudo'
+
 
 ### ────────────────────────────
 ### 🐳 Docker
@@ -31,76 +34,78 @@ alias d='docker'
 alias dc='docker compose'
 alias dprune='docker system prune -f'
 
-### ────────────────────────────
-### 📁 Navigation (FIXED)
-
-data() { cd "$DATA" || return; }
-work() { cd "$WORK" || return; }
-notes() { cd "$NOTES" || return; }
-dockerdir() { cd "$DATAR/docker" || return; }
-
-# short aliases
-alias w='work'
-alias n='notes'
-alias dod='dockerdir'
-
-### ────────────────────────────
-### 🐳 Docker Helpers
-
 dr() { dc down && dc up -d; }
 dbr() { dc down && dc build --no-cache && dc up -d; }
 dlogs() { dc logs -f; }
 dps() { dc ps; }
 drestart() { dc restart; }
+dp() { docker exec -it postgres psql -U nhr26 -d nihardb }
 
-dp() {
-  docker exec -it postgres psql -U nhr26 -d nihardb
-}
+
+### ────────────────────────────
+### 📁 Navigation
+
+alias b='cd $BACKUP'
+alias ddata='cd $DATA'
+alias data='cd $DATA'
+alias narch='cd $WORK/narch'
+alias nhr='cd $WORK/nih.ar'
+alias video='cd $DATA/video'
+alias w='cd $WORK'
+alias work='cd $WORK'
+alias n='cd $DATA/notes'
+alias note='cd $DATA/notes'
+alias dod='cd $DATAR/docker'
+
 
 ### ────────────────────────────
 ### 🧠 Dev / Dotfiles
 
 alias dot='/usr/bin/git --git-dir=$HOME/.config/.dotfile --work-tree=$HOME'
-
 alias pywork='source "$WORK/pyenv/bin/activate"'
-alias vih='$WORK/narch/header.sh'
 alias h='$WORK/narch/headerize.py'
 alias nf='$WORK/narch/niharfetch.sh'
-
 alias o='docker exec -it nimos_ollama ollama'
 alias ol='o list'
 alias op='o pull'
 alias or='o run'
+alias z='nvim $(fzf -m --preview="batcat --color=always {}")'
+
 
 ### ────────────────────────────
-### 🗂 Safe Move (instead of delete)
+### ⚡ Narch Short Aliases
 
-rmv() {
-  mv -i "$@" /tmp/
-}
+alias rmv='safe_move'
+alias ex='extract_archive'
+alias t='create_backup'
+alias tr='extract_tar'
+alias nf='$WORK/narch/niharfetch.sh'
+
 
 ### ────────────────────────────
-### 📦 Extract Anything
+### 📦 System / Package Helpers
 
-ex() {
-  [[ -z "$1" ]] && { echo "Usage: ex <file>"; return 1; }
-  [[ ! -f "$1" ]] && { echo "'$1' is not a valid file"; return 1; }
+# Detect distribution
+if [ -f /etc/os-release ]; then
+  . /etc/os-release
+  DISTRO="$ID"
+else
+  DISTRO="unknown"
+fi
 
-  case "$1" in
-    *.tar.bz2) tar xjf "$1" ;;
-    *.tar.gz)  tar xzf "$1" ;;
-    *.bz2)     bunzip2 "$1" ;;
-    *.rar)     unrar x "$1" ;;
-    *.gz)      gunzip "$1" ;;
-    *.tar)     tar xf "$1" ;;
-    *.tbz2)    tar xjf "$1" ;;
-    *.tgz)     tar xzf "$1" ;;
-    *.zip)     unzip "$1" ;;
-    *.Z)       uncompress "$1" ;;
-    *.7z)      7z x "$1" ;;
-    *.deb)     ar x "$1" ;;
-    *.tar.xz)  tar xf "$1" ;;
-    *.tar.zst) unzstd "$1" ;;
-    *)         echo "'$1' cannot be extracted via ex()" ;;
-  esac
-}
+# Arch
+if [ "$DISTRO" = "arch" ]; then
+  alias yay='paru'
+  alias nay='paru -Rns'
+fi
+
+# Debian
+if [ "$DISTRO" = "debian" ]; then
+  alias apt='sudo apt'
+  alias nay='sudo apt remove --purge'
+  alias update='sudo apt update && sudo apt upgrade && sudo apt autoremove'
+fi
+
+# Only run in interactive shell
+[[ $- != *i* ]] && return
+

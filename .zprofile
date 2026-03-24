@@ -8,7 +8,7 @@
 #       ██║ ╚████║██║██║  ██║██║  ██║██║  ██║███████║
 #       ╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝╚══════╝
 #       DRAFTED BY [https://nih.ar] ON 11-05-2021.
-#       SOURCE [.zprofile] LAST MODIFIED ON 23-03-2026
+#       SOURCE [.zprofile] LAST MODIFIED ON 24-03-2026
 #
 
 ### ────────────────────────────
@@ -23,10 +23,12 @@ export TERMINAL="xterm"
 export DATAR="/home/datar"
 export DATA="$DATAR/data"
 
+### Custom Shortcuts #######################################################
 export WORK="$DATA/workspace"
 export NOTES="$DATA/notes"
-export BACKUP="$DATAR/backup"
+export BACKUP="$DATA/backups"
 
+### History (Zsh) ##########################################################
 export HISTFILE="$XDG_DATA_HOME/zsh/history"
 
 ### ────────────────────────────
@@ -47,7 +49,6 @@ export XAUTHORITY="$XDG_RUNTIME_DIR/Xauthority"
 export XINITRC="$XDG_CONFIG_HOME/X11/xinitrc"
 export XSERVERRC="$XDG_CONFIG_HOME/X11/xserverrc"
 
-export VSCODE_PORTABLE="$XDG_DATA_HOME/vscode"
 export LESSHISTFILE="-"
 export ZDOTDIR="$HOME/.config/zsh"
 
