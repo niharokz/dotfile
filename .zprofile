@@ -8,7 +8,7 @@
 #       ██║ ╚████║██║██║  ██║██║  ██║██║  ██║███████║
 #       ╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝╚══════╝
 #       DRAFTED BY [https://nih.ar] ON 11-05-2021.
-#       SOURCE [.zprofile] LAST MODIFIED ON 24-03-2026
+#       SOURCE [.zprofile] LAST MODIFIED ON 04-04-2026
 #
 
 ### ────────────────────────────
@@ -68,11 +68,6 @@ export XDG_VIDEOS_DIR="$DATA/videos"
 export _JAVA_OPTIONS="-Djava.util.prefs.userRoot=$XDG_CONFIG_HOME/java"
 
 ### ────────────────────────────
-### 📦 PATH (clean order)
-
-export PATH="$HOME/.local/bin:$HOME/.cargo/bin:$PATH"
-
-### ────────────────────────────
 ### 📦 NPM
 
 export npm_config_prefix="$HOME/.local"
@@ -81,3 +76,19 @@ export npm_config_prefix="$HOME/.local"
 ### 🔐 GPG
 
 gpgconf --launch gpg-agent
+export GPG_TTY="$(tty)"
+
+### ────────────────────────────
+### 🐹 GO
+
+export GOPATH="$XDG_DATA_HOME/go"
+export GOMODCACHE="$XDG_CACHE_HOME/go/mod"
+export GOCACHE="$XDG_CACHE_HOME/go/build"
+export GOENV="$XDG_CONFIG_HOME/go/env"
+export GOBIN="$HOME/.local/bin"
+export PATH="$GOBIN:$GOPATH/bin:$PATH"
+
+### ────────────────────────────
+### 📦 PATH (clean order)
+
+export PATH="$HOME/.local/bin:$HOME/.cargo/bin:$PATH"

@@ -151,11 +151,6 @@ source /usr/share/zsh/plugins/zsh-history-substring-search/zsh-history-substring
 ### ────────────────────────────
 ### 🛠 Dev Environment
 
-export GOPATH="$HOME/go"
-export GOCACHE="$XDG_CACHE_HOME/go-build"
-export PATH="$PATH:$GOPATH/bin"
-
-export GPG_TTY="$(tty)"
 export TERMINAL=kitty
 
 ### ────────────────────────────
