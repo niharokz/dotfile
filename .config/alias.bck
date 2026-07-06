@@ -6,31 +6,46 @@
 #       ██║ ╚████║██║██║  ██║██║  ██║██║  ██║███████║
 #       ╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝╚══════╝
 #       DRAFTED BY [https://nih.ar] ON 30-09-2020.
-#       SOURCE [.alias] LAST MODIFIED ON 05-07-2026
+#       SOURCE [.alias] LAST MODIFIED ON 03-04-2026
 #
 
+# Load secrets (if exists)
 [[ -f "$XDG_CONFIG_HOME/.secrets" ]] && source "$XDG_CONFIG_HOME/.secrets"
+
+
+### ────────────────────────────
+### 🔧 Command Shortcuts
 
 alias c='clear'
 alias f='fzf'
 alias g='git'
 alias home='cd ~'
+alias l='exa -lars date'
 alias ports='sudo lsof -i -P -n | grep LISTEN'
 alias rc='rclone'
 alias s='sudo'
 alias v='nvim'
 alias vi='nvim'
+alias vn="vnstat -m | awk -v m=\$(date +%Y-%m) '\$1==m {print \$8, \$9}'"
 
-if command -v vnstat &>/dev/null; then
-    alias vn="vnstat -m | awk -v m=\$(date +%Y-%m) '\$1==m {print \$8, \$9}'"
-else
-    alias vn='echo "vnstat not installed"'
-fi
 
-alias ls='exa'
-alias ll='exa -l'
-alias la='exa -la'
-alias l='exa -la --sort=date --reverse'
+### ────────────────────────────
+### 🐳 Docker
+
+alias d='docker'
+alias dc='docker compose'
+alias dprune='docker system prune -f'
+
+dr() { dc down && dc up -d; }
+dbr() { dc down && dc build --no-cache && dc up -d; }
+dlogs() { dc logs -f; }
+dps() { dc ps; }
+drestart() { dc restart; }
+dp() { docker exec -it postgres psql -U nhr26 -d nihardb }
+
+
+### ────────────────────────────
+### 📁 Navigation
 
 alias b='cd $BACKUP'
 alias ddata='cd $DATA'
@@ -44,45 +59,36 @@ alias note='cd $DATA/notes'
 alias dod='cd $DATAR/docker'
 alias tm='cd $DATAR/docker/taskmaster'
 
-alias ..='cd ..'
-alias ...='cd ../..'
-alias ....='cd ../../..'
 
-alias d='docker'
-alias dc='docker compose'
-alias dprune='docker system prune -f'
-alias dbr='dc down && dc build --no-cache && dc up -d'
-alias dlogs='dc logs -f'
-alias dps='dc ps'
+### ────────────────────────────
+### 🧠 Dev / Dotfiles
 
 alias dot='/usr/bin/git --git-dir=$HOME/.config/.dotfile --work-tree=$HOME'
 alias pywork='source "$WORK/pyenv/bin/activate"'
 alias h='$WORK/narch/headerize.py'
 alias n='$WORK/narch/notify.sh'
 alias nf='$WORK/narch/niharfetch.sh'
+alias z='nvim $(fzf -m --preview="batcat --color=always {}")'
 
-if command -v batcat &>/dev/null; then
-    alias z='nvim $(fzf -m --preview="batcat --color=always {}" --select-1 --exit-0)'
-else
-    alias z='nvim $(fzf -m --preview="cat {}" --select-1 --exit-0)'
-fi
+### ────────────────────────────
+### ⚡ Narch Short Aliases
 
 alias rmv='safe_move'
 alias ex='extract_archive'
 alias t='create_backup'
 alias tg='create_backup_gpg'
 alias tr='extract_tar'
+alias nf='$WORK/narch/niharfetch.sh'
 
 alias nimo='${DATAR}/docker/nimo/scripts/nimo.sh'
 alias tel='python3 ${DATAR}/docker/telegrambot/tel.py'
 alias ask="docker exec -it ollama ollama run gemma4:e2b"
+alias clist='find . -type f -exec sh -c '\''echo "=== {} ==="; cat "{}"'\'' \;'
 
-if command -v batcat &>/dev/null; then
-    alias clist='find . -type f -exec batcat --style=header {} +'
-else
-    alias clist='find . -type f -exec sh -c '\''echo "=== {} ==="; cat "{}"'\'' \;'
-fi
+### ────────────────────────────
+### 📦 System / Package Helpers
 
+# Detect distribution
 if [ -f /etc/os-release ]; then
   . /etc/os-release
   DISTRO="$ID"
@@ -90,31 +96,19 @@ else
   DISTRO="unknown"
 fi
 
+# Arch
 if [ "$DISTRO" = "arch" ]; then
   alias yay='paru'
   alias nay='paru -Rns'
-  alias update='paru -Syu'
 fi
 
+# Debian
 if [ "$DISTRO" = "debian" ]; then
   alias apt='sudo apt'
   alias nay='sudo apt remove --purge'
   alias update='sudo apt update && sudo apt upgrade && sudo apt autoremove'
 fi
 
+# Only run in interactive shell
 [[ $- != *i* ]] && return
 
-alias rm='rm -i'
-alias cp='cp -i'
-alias mv='mv -i'
-alias mkdir='mkdir -p'
-
-alias grep='grep --color=auto'
-alias egrep='egrep --color=auto'
-alias fgrep='fgrep --color=auto'
-
-alias edit-alias='$EDITOR $XDG_CONFIG_HOME/.alias'
-alias reload-alias='source $XDG_CONFIG_HOME/.alias'
-
-alias please='sudo $(fc -ln -1)'
-alias path='echo -e ${PATH//:/\\n}'
