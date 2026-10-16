@@ -30,3 +30,15 @@ note/
 ### ⚙️ Application-Specific Config Files 
 .config/git/config
 .config/X11/$XDG_CACHE_HOME
+
+### 🔐 Secrets
+.rahi-keys/
+.docker/
+.copilot/
+.gnupg/
+
+### 🗑️ Root clutter
+/Downloads
+/*.png
+/*.txt
+.vscode-shared/

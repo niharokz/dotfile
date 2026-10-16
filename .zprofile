@@ -53,7 +53,7 @@ export ZDOTDIR="$HOME/.config/zsh"
 ### XDG Desktop Directories ################################################
 # (Applications will use ~/.config/user-dirs.dirs)
 export XDG_DESKTOP_DIR="$HOME/desktop"
-export XDG_DOWNLOAD_DIR="$HOME/download"
+export XDG_DOWNLOAD_DIR="$HOME/Downloads"
 export XDG_DOCUMENTS_DIR="$HOME/documents"
 export XDG_MUSIC_DIR="$DATA/cloud/gdrive/music"
 export XDG_PICTURES_DIR="$DATA/cloud/gdrive/photo"

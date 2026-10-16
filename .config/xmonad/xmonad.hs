@@ -19,6 +19,7 @@ myEditor        = "nvim"
 myBrowser       = "microsoft-edge-stable"
 myCodeEditor    = "code"
 myBeyondCompare = "bcompare"
+myNote          = "obsidian"
 
 
 --- ────────────────────────────
@@ -61,14 +62,14 @@ myLayout =
 --- 🗂 Workspaces (Emoji via xmobar font index)
 
 myWorkspaces =
-  [ "<fn=1>🗿</fn> 1"
-  , "<fn=1>💀</fn> 2"
-  , "<fn=1>📡</fn> 3"
-  , "<fn=1>🐶</fn> 4"
-  , "<fn=1>💐</fn> 5"
-  , "<fn=1>⏳</fn> 6"
-  , "<fn=1>🔥</fn> 7"
-  , "<fn=1>🍃</fn> 8"
+  [ "<fn=1>🏦</fn> 1"
+  , "<fn=1>🗿</fn> 2"
+  , "<fn=1>🍄</fn> 3"
+  , "<fn=1>🍁</fn> 4"
+  , "<fn=1>🐔</fn> 5"
+  , "<fn=1>🛸</fn> 6"
+  , "<fn=1>⏳</fn> 7"
+  , "<fn=1>🔥</fn> 8"
   , "<fn=1>🗼</fn> 9"
   ]
 
@@ -139,9 +140,10 @@ myKeys =
   , ((myModMask, xK_d), spawn myLauncher)
   , ((myModMask, xK_z), spawn myBrowser)
   , ((myModMask, xK_c), spawn myCodeEditor)
-  , ((myModMask, xK_b), spawn "brave-browser")
+  , ((myModMask, xK_b), spawn "brave-browser --incognito")
 
   , ((myModMask, xK_e), spawn "zsh $WORK/narch/editconfig.sh")
+  , ((myModMask, xK_o), spawn myNote)
   , ((myModMask, xK_x), kill)
 
   , ((myModMask .|. shiftMask,   xK_s), spawn "flameshot gui")
@@ -153,5 +155,5 @@ myKeys =
   , ((0, 0x1008FF12), spawn "pactl set-sink-mute @DEFAULT_SINK@ toggle")
 
   -- Network Manager
-  , ((myModMask, xK_w), spawn "nm-connection-editor")
+  , ((myModMask, xK_s), spawn "surfshark")
   ]

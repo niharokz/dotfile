@@ -21,7 +21,7 @@ Config {
   commands = [
 
     Run Cpu
-      [ "-t", "<fc=#33cccc>  </fc><total>%"
+      [ "-t", "<fc=#c6faa7>🧠  </fc><total>%"
       , "-H", "50"
       , "--high", "#cc6666"
       ] 20,
@@ -44,6 +44,11 @@ Config {
       , "nmcli -t -f DEVICE,TYPE,STATE,CONNECTION dev | awk -F: '$2==\"wifi\"{ if($3==\"connected\"){ print \"<action=`kitty -e nmtui` button=1><fc=#00ffcc>🌐 </fc><fc=#ffffff>\" $4 \"</fc></action>\" } else { print \"<action=`kitty -e nmtui` button=1><fc=#cc6666>⛔ Disconnected</fc></action>\" }}'"
       ] "wifi" 30,
 
+    Run Com "sh"
+      [ "-c"
+      , "USAGE=$(vnstat -m | awk -v m=$(date +\\%Y-\\%m) '$0 ~ m {print $8, $9}'); echo \"<fc=#deadf8>🛰️ $USAGE</fc>\""
+      ] "net" 20,
+
     Run Battery
       [ "-t", "<fc=#66d9cc> </fc><acstatus> <left>%"
       , "-L", "20"
@@ -55,7 +60,7 @@ Config {
       , "--"
       , "-O", "<fc=#44dd44> Charging</fc>"
       , "-o", "<fc=#ffaa00>  Discharging</fc>"
-      , "-i", "<fc=#66d9cc> Full</fc>"
+      , "-i", "<fc=#66d9cc>  Full</fc>"
       ] 50,
 
     Run UnsafeStdinReader
@@ -65,5 +70,5 @@ Config {
   alignSep = "}{",
 
   template =
-    " %UnsafeStdinReader% }{ %cpu%   %memory%   %volume%   %wifi%   %battery%   %date%  "
+    " %UnsafeStdinReader% }{ %cpu%   %memory%   %volume%  %net%  %wifi%   %battery%   %date%  "
 }

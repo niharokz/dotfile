@@ -9,8 +9,18 @@ picom/
 Code/
 code-oss/
 vue/
-.dotfile # Assuming this is a temporary file or specific project-related item
-.secrets/ # Important for sensitive configuration like API keys
+
+### 🔐 Secrets — never commit
+.secrets
+.dotfile
+Surfshark/
+rclone/
+tailscale/
+gnupg/
+docker/
+
+### 📝 App state, not config
+obsidian/
 
 ### 🎵 Media and System Utilities (Often cache or dynamic)
 vlc/

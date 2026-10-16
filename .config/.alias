@@ -23,7 +23,7 @@ alias g='git'
 alias v='nvim'
 alias vi='nvim'
 alias f='fzf'
-alias l='exa -lars date'
+alias l='exa -las date'
 alias home='cd ~'
 alias ports='sudo lsof -i -P -n | grep LISTEN'
 alias s='sudo'
@@ -75,6 +75,7 @@ alias note='cd $DATA/notes'
 
 alias pyenv='source $WORK/pyenv/bin/activate'
 alias h='python3 $WORK/narch/headerize.py'
+alias sn='ssh nimory'
 
 ### ────────────────────────────
 ### ⚡ Narch Short Aliases
