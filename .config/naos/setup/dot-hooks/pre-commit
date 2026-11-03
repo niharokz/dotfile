@@ -1,0 +1,19 @@
+#!/bin/sh
+# pre-commit hook for the dotfiles repo (enabled with: dot config core.hooksPath ~/.config/naos/setup/dot-hooks)
+# GitLab only shows a README from the repo root, but the page is edited in ~/.config/readmedoc.
+# When .config/readmedoc/README.md is staged, copy it to the root README.md in the commit, pointing
+# its image links at .config/readmedoc/. The root copy never needs to exist in ~ (sparse checkout).
+set -e
+
+SRC=.config/readmedoc/README.md
+DIR=.config/readmedoc
+
+git diff --cached --quiet -- "$SRC" && exit 0                     # README source not part of this commit
+
+blob=$(git show ":$SRC" \
+  | sed -E "s#(\]\(|src=\")([A-Za-z0-9._-]+\.(webp|png|jpg|gif|svg))#\1$DIR/\2#g" \
+  | git hash-object -w --stdin)
+
+git update-index --add --cacheinfo "100644,$blob,README.md"
+git update-index --skip-worktree README.md                         # stays out of ~ (sparse)
+echo "pre-commit: README.md updated from $SRC"

@@ -1,0 +1,20 @@
+#!/usr/bin/env bash
+# nimory-status: xmobar dot for the nimory homelab over Tailscale.
+# Green = answers ping, red = unreachable. Left click: ssh in kitty. Right click: dashboard in the browser.
+# Settings: ${XDG_CONFIG_HOME:-~/.config}/naos/nimory.conf
+set -u
+
+HOST=nimory; SSH="ssh nimory"; URL=https://home.nihars.com
+CONF="${XDG_CONFIG_HOME:-$HOME/.config}/naos/nimory.conf"
+# shellcheck disable=SC1090  # user settings file
+[[ -r $CONF ]] && . "$CONF"
+
+if ping -c1 -W1 "$HOST" >/dev/null 2>&1; then
+  dot="<fc=#3FB27F>●</fc> <fc=#8B979A>nimory</fc>"
+else
+  dot="<fc=#FF6B6B>●</fc> <fc=#5C6B6A>nimory</fc>"
+fi
+
+# kitty window titled "nimory"; stays open with a message if ssh fails, so errors can be read
+LEFT="kitty --class nimory --title nimory sh -c '$SSH || { echo; echo ssh failed, press enter; read -r _; }'"
+echo "<action=\`$LEFT\` button=1><action=\`xdg-open $URL\` button=3>${dot}</action></action>"

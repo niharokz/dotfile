@@ -1,0 +1,17 @@
+# naos · default applications (xdg-open, kitty links, Electron apps)
+# Check: xdg-settings get default-web-browser   ->  microsoft-edge.desktop
+
+[Default Applications]
+x-scheme-handler/http=microsoft-edge.desktop
+x-scheme-handler/https=microsoft-edge.desktop
+x-scheme-handler/about=microsoft-edge.desktop
+x-scheme-handler/unknown=microsoft-edge.desktop
+text/html=microsoft-edge.desktop
+application/xhtml+xml=microsoft-edge.desktop
+application/x-extension-htm=microsoft-edge.desktop
+application/x-extension-html=microsoft-edge.desktop
+
+[Added Associations]
+x-scheme-handler/http=microsoft-edge.desktop;
+x-scheme-handler/https=microsoft-edge.desktop;
+text/html=microsoft-edge.desktop;

@@ -1,0 +1,125 @@
+#!/usr/bin/env bash
+# naos-battery: battery level in the bar, alerts as it drains, and an action when it is critical.
+# Usage:
+#   naos-battery --bar     one xmobar segment (colour changes at WARN / LOW / CRITICAL)
+#   naos-battery --watch   background watcher started by xmonad (one instance only)
+#   naos-battery --status  plain text, for checking the setup
+# Settings: ${XDG_CONFIG_HOME:-~/.config}/naos/battery.conf
+set -u
+
+CONF="${XDG_CONFIG_HOME:-$HOME/.config}/naos/battery.conf"
+RUN="${XDG_RUNTIME_DIR:-/tmp}/naos-battery"                      # alert state, cleared on reboot
+
+# ---------------------------------------------------------------- settings (defaults, then the file)
+declare -A DEFAULT=([WARN]=20 [LOW]=10 [CRITICAL]=5 [GRACE]=60 [FULL]=95 [INTERVAL]=60)
+load_settings() {  # read battery.conf; bad numbers fall back to the default
+  local v
+  for v in "${!DEFAULT[@]}"; do declare -g "$v=${DEFAULT[$v]}"; done
+  ACTION=suspend
+  # shellcheck disable=SC1090  # user settings file
+  [[ -r $CONF ]] && . "$CONF"
+  for v in "${!DEFAULT[@]}"; do
+    [[ ${!v} =~ ^[0-9]+$ ]] || { echo "naos-battery: $v='${!v}' is not a number, using ${DEFAULT[$v]}" >&2; declare -g "$v=${DEFAULT[$v]}"; }
+  done
+  (( INTERVAL >= 10 )) || INTERVAL=10
+}
+load_settings
+
+# ---------------------------------------------------------------- battery
+BAT="${NAOS_BAT_DIR:-}"                                           # override for testing
+if [[ -z $BAT ]]; then for b in /sys/class/power_supply/BAT*; do [[ -r $b/capacity ]] && { BAT=$b; break; }; done; fi
+
+read_battery() {  # sets LEVEL (0-100) and STATE (charging | discharging | full | unknown)
+  LEVEL=$(<"$BAT/capacity")
+  STATE=$(tr '[:upper:]' '[:lower:]' < "$BAT/status")
+  [[ $STATE == "not charging" ]] && STATE=full                    # plugged in, charge limit reached
+}
+
+zone() {  # zone LEVEL -> ok | warn | low | critical
+  if   (( $1 <= CRITICAL )); then echo critical
+  elif (( $1 <= LOW ));      then echo low
+  elif (( $1 <= WARN ));     then echo warn
+  else echo ok; fi
+}
+
+notify() {  # notify URGENCY TITLE BODY: replaces the previous battery notice instead of stacking
+  command -v notify-send >/dev/null || return 0
+  notify-send -a battery -u "$1" -h string:x-dunst-stack-tag:naos-battery "$2" "$3" 9>&-
+}
+
+# ---------------------------------------------------------------- --bar
+bar() {
+  if [[ -z $BAT ]]; then echo "<fc=#5C6B6A>bat --</fc>"; return; fi
+  read_battery
+  case "$STATE" in
+    charging) echo "<fc=#5C6B6A>bat</fc> ${LEVEL}% <fc=#3FB27F>charging</fc>"; return ;;
+    full)     echo "<fc=#5C6B6A>bat</fc> ${LEVEL}% <fc=#66BDB3>full</fc>"; return ;;
+  esac
+  case "$(zone "$LEVEL")" in
+    critical) echo "<fc=#070B0F,#FF6B6B> bat ${LEVEL}% plug in </fc>" ;;
+    low)      echo "<fc=#070B0F,#E0A63A> bat ${LEVEL}% low </fc>" ;;
+    warn)     echo "<fc=#5C6B6A>bat</fc> <fc=#E0A63A>${LEVEL}%</fc>" ;;
+    *)        echo "<fc=#5C6B6A>bat</fc> ${LEVEL}%" ;;
+  esac
+}
+
+# ---------------------------------------------------------------- critical action with a grace period
+critical_action() {
+  [[ $ACTION == none ]] && return
+  notify critical "Battery at ${LEVEL}%" "Plug in now: naos will ${ACTION} in ${GRACE} s."
+  local waited=0
+  while (( waited < GRACE )); do                                  # give up as soon as the charger is in
+    sleep 5 9>&-; waited=$(( waited + 5 ))                         # 9>&-: children must not hold the lock
+    read_battery
+    [[ $STATE != discharging ]] && { notify normal "Charging" "${ACTION^} cancelled."; return; }
+  done
+  case "$ACTION" in
+    suspend|hibernate|poweroff) systemctl "$ACTION" 9>&- ;;
+    *) echo "naos-battery: unknown ACTION '$ACTION'" >&2 ;;
+  esac
+}
+
+# ---------------------------------------------------------------- --watch
+watch() {
+  [[ -n $BAT ]] || { echo "naos-battery: no battery found" >&2; exit 1; }
+  mkdir -p "$RUN"
+  exec 9>"$RUN/lock"
+  flock -n 9 || exit 0                                            # already running
+  local last="" now
+  while :; do
+    load_settings                                                 # edits apply without a restart
+    read_battery
+    if [[ $STATE == discharging ]]; then
+      now=$(zone "$LEVEL")
+      if [[ $now != "$last" && $now != ok ]]; then                # only when entering a lower zone
+        case "$now" in
+          warn)     notify normal   "Battery at ${LEVEL}%" "Worth finding the charger." ;;
+          low)      notify critical "Battery low: ${LEVEL}%" "Plug in soon." ;;
+          critical) critical_action ;;
+        esac
+      fi
+      last=$now
+      : > "$RUN/full-notified"
+    else
+      last=""                                                     # plugged in: alerts re-arm
+      if (( FULL > 0 && LEVEL >= FULL )) && [[ ! -s $RUN/full-notified ]]; then
+        notify low "Battery at ${LEVEL}%" "Charged enough; you can unplug."
+        echo 1 > "$RUN/full-notified"
+      fi
+    fi
+    if [[ $last == low || $last == critical ]]; then sleep $(( INTERVAL / 2 )) 9>&-; else sleep "$INTERVAL" 9>&-; fi
+  done
+}
+
+# ---------------------------------------------------------------- main
+case "${1:---bar}" in
+  --bar)    bar ;;
+  --watch)  watch ;;
+  --status)
+    [[ -n $BAT ]] || { echo "no battery"; exit 1; }
+    read_battery
+    echo "battery: $BAT  level: ${LEVEL}%  state: $STATE  zone: $(zone "$LEVEL")"
+    echo "settings: WARN=$WARN LOW=$LOW CRITICAL=$CRITICAL ACTION=$ACTION GRACE=${GRACE}s FULL=$FULL INTERVAL=${INTERVAL}s"
+    ;;
+  *) sed -n '2,7p' "$0"; exit 1 ;;
+esac

@@ -1,0 +1,20 @@
+#!/usr/bin/env bash
+# naos-wifi: network segment for xmobar (NetworkManager). Click opens nmtui in kitty.
+set -u
+
+# shellcheck disable=SC2016  # backticks are xmobar markup, not shell
+ACTION_OPEN='<action=`kitty -e nmtui` button=1>'
+
+# first connected device: TYPE:CONNECTION, e.g. "wifi:NorthBlue_5G" or "ethernet:Wired connection 1"
+line=$(nmcli -t -f TYPE,STATE,CONNECTION device 2>/dev/null | awk -F: '$2=="connected" && ($1=="wifi" || $1=="ethernet") {print $1":"$3; exit}')
+type=${line%%:*}
+name=${line#*:}
+name=${name//[<>]/}                                            # strip characters xmobar would read as markup
+
+case "$type" in
+  wifi)     text="<fc=#5C6B6A>wifi</fc> ${name}" ;;
+  ethernet) text="<fc=#5C6B6A>eth</fc> wired" ;;
+  *)        text="<fc=#FF6B6B>offline</fc>" ;;
+esac
+
+echo "${ACTION_OPEN}${text}</action>"

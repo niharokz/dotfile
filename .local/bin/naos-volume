@@ -1,0 +1,23 @@
+#!/usr/bin/env bash
+# naos-volume: volume segment for xmobar. Click to mute, scroll to change volume. Needs pactl (PipeWire/Pulse).
+set -u
+
+SINK="@DEFAULT_SINK@"
+vol=$(pactl get-sink-volume "$SINK" 2>/dev/null | grep -oE '[0-9]+%' | head -n1 | tr -d '%')  # left channel %
+mute=$(pactl get-sink-mute "$SINK" 2>/dev/null | awk '{print $2}')                            # yes / no
+
+if [[ -z "$vol" ]]; then                                       # no audio server yet
+  echo "<fc=#5C6B6A>vol --</fc>"
+  exit 0
+fi
+
+if [[ "$mute" == "yes" || "$vol" -eq 0 ]]; then
+  text="<fc=#5C6B6A>vol</fc> <fc=#FF6B6B>mute</fc>"
+elif (( vol > 100 )); then                                     # boosted past 100 %
+  text="<fc=#5C6B6A>vol</fc> <fc=#E0A63A>${vol}%</fc>"
+else
+  text="<fc=#5C6B6A>vol</fc> ${vol}%"
+fi
+
+# button 1 = click, 4/5 = scroll up/down
+echo "<action=\`pactl set-sink-mute $SINK toggle\` button=1><action=\`pactl set-sink-volume $SINK +5%\` button=4><action=\`pactl set-sink-volume $SINK -5%\` button=5>${text}</action></action></action>"

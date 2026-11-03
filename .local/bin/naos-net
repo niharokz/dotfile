@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+# naos-net: data used this month for xmobar, from vnstat. Prints nothing if vnstat is missing.
+set -u
+
+command -v vnstat >/dev/null 2>&1 || exit 0
+
+# --oneline fields: 8 = month, 11 = month total (rx + tx), e.g. "706.26 MiB"
+total=$(vnstat --oneline 2>/dev/null | cut -d';' -f11)
+
+[[ -n "$total" ]] && echo "<fc=#5C6B6A>net</fc> ${total}"
+exit 0

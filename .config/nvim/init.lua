@@ -1,227 +1,228 @@
------------------------------------------------------------
--- Catppuccin Mocha -> Terminal-matching dark-teal AMOLED
--- Paste over ~/.config/nvim/init.lua and run :Lazy sync
------------------------------------------------------------
+-----------------------------------------------------------------------
+--  naos · nvim/init.lua · nss theme
+--  Plugins via lazy.nvim. After replacing this file run :Lazy sync
+-----------------------------------------------------------------------
 
--- Basics
-vim.g.mapleader = " "
-vim.opt.syntax = "on"
-vim.opt.encoding = "UTF-8"
-vim.opt.title = true
+-- nss palette (same values as nih.ar, the boot screens, kitty and xmobar)
+local nss = {
+  bg       = "#070B0F", -- background
+  surface  = "#0F161B", -- floats, menus
+  surface2 = "#152027", -- raised / selected
+  line     = "#1F2C33", -- borders, separators
+  fg       = "#E6ECEC", -- text
+  muted    = "#8B979A", -- secondary text
+  faint    = "#5C6B6A", -- comments, hints
+  teal     = "#3A807A", -- accent fill
+  ink      = "#66BDB3", -- readable accent (keywords)
+  peri     = "#A9B8FF", -- second accent (functions)
+  amber    = "#E0A63A", -- numbers, constants, warnings
+  green    = "#3FB27F", -- ok / added
+  red      = "#FF6B6B", -- errors / removed
+  mint     = "#7FD6C7", -- strings (kept from the old teal scheme)
+}
 
--- Indentation
-vim.opt.tabstop = 8
-vim.opt.softtabstop = 0
-vim.opt.expandtab = true
-vim.opt.shiftwidth = 4
-vim.opt.smarttab = true
+-----------------------------------------------------------------------
+-- Options
+-----------------------------------------------------------------------
+vim.g.mapleader = " "                      -- <leader> = space
+vim.g.loaded_netrw = 1                     -- nvim-tree replaces netrw
+vim.g.loaded_netrwPlugin = 1
 
--- Numbers
-vim.opt.number = true
-vim.opt.relativenumber = true
+local o = vim.opt
+o.title = true                             -- window title = file name
 
--- Search
-vim.opt.incsearch = true
-vim.opt.hlsearch = true
-vim.opt.ignorecase = true
-vim.opt.smartcase = true
+o.tabstop = 8                              -- indentation: 4 spaces, real tabs shown as 8
+o.softtabstop = 0
+o.expandtab = true
+o.shiftwidth = 4
+o.smarttab = true
 
--- Files
-vim.opt.swapfile = false
-vim.opt.backup = false
-vim.opt.writebackup = false
+o.number = true                            -- line numbers, relative to the cursor
+o.relativenumber = true
 
--- UI
-vim.opt.laststatus = 3
-vim.opt.scrolloff = 5
-vim.opt.wildmenu = true
-vim.opt.wrap = false
-vim.opt.hidden = true
-vim.opt.termguicolors = true
-vim.o.background = "dark"
+o.incsearch = true                         -- search: live, highlighted, case-smart
+o.hlsearch = true
+o.ignorecase = true
+o.smartcase = true
 
--- Clipboard
-if vim.fn.has("unnamedplus") == 1 then
-  vim.opt.clipboard = "unnamed,unnamedplus"
+o.swapfile = false                         -- no swap/backup files; persistent undo instead
+o.backup = false
+o.writebackup = false
+o.undofile = true
+
+o.laststatus = 3                           -- one statusline for all windows
+o.scrolloff = 5
+o.wrap = false
+o.hidden = true
+o.termguicolors = true
+o.background = "dark"
+o.cursorline = true
+o.signcolumn = "yes"                       -- keep the gutter steady for git signs
+o.showmode = false                         -- lualine already shows the mode
+o.pumblend = 10
+o.winblend = 10
+o.fillchars = { eob = " " }                -- no ~ after the end of the buffer
+
+if vim.fn.has("clipboard") == 1 then
+  o.clipboard = "unnamedplus"              -- yank/paste use the system clipboard
 end
 
--- Small UI tweaks
-vim.opt.cursorline = true
-vim.opt.signcolumn = "yes"
-vim.opt.showmode = false
-vim.opt.pumblend = 10
-vim.opt.winblend = 10
-vim.opt.fillchars = "eob: "
+vim.env.PATH = vim.env.HOME .. "/.local/bin:" .. vim.env.PATH  -- personal scripts available to :! and plugins
 
--- PATH
-vim.env.PATH = vim.env.HOME .. "/.local/bin:" .. vim.env.PATH
+-- swap/backup/undo live under ~/.cache/nvim (created if missing)
+local cache = vim.fn.stdpath("cache")
+for _, dir in ipairs({ "swap", "backup", "undo" }) do
+  vim.fn.mkdir(cache .. "/" .. dir, "p")
+end
+o.directory = cache .. "/swap//"
+o.backupdir = cache .. "/backup//"
+o.undodir = cache .. "/undo//"
 
------------------------------------------------------------
+-----------------------------------------------------------------------
 -- lazy.nvim bootstrap
------------------------------------------------------------
+-----------------------------------------------------------------------
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
-if not vim.loop.fs_stat(lazypath) then
-  vim.fn.system({
-    "git", "clone", "--filter=blob:none",
-    "https://github.com/folke/lazy.nvim.git",
-    lazypath,
-  })
+if not (vim.uv or vim.loop).fs_stat(lazypath) then
+  local out = vim.fn.system({ "git", "clone", "--filter=blob:none", "--branch=stable",
+    "https://github.com/folke/lazy.nvim.git", lazypath })
+  if vim.v.shell_error ~= 0 then
+    vim.api.nvim_echo({ { "lazy.nvim clone failed:\n" .. out, "ErrorMsg" } }, true, {})
+    return
+  end
 end
 vim.opt.rtp:prepend(lazypath)
 
------------------------------------------------------------
--- Palette taken from your kitty / alacritty configs
--- (cursor: #00cccc, selection: #00aaaa, fg: #dcdccc, teal/green: #339999)
------------------------------------------------------------
-local palette = {
-  bg        = "#000000",  -- true black
-  fg        = "#dcdccc",  -- foreground
-  cursor    = "#00cccc",
-  selection = "#00aaaa",
-  teal      = "#339999",
-  teal_bright = "#00ffff",
-  accent    = "#0db5a7",  -- optional strong teal
-  dim_teal  = "#0a8f85",
-  comment   = "#2a5a54",
-}
-
------------------------------------------------------------
+-----------------------------------------------------------------------
 -- Plugins
------------------------------------------------------------
-require("lazy").setup({
-  { "nvim-tree/nvim-web-devicons" },
+-----------------------------------------------------------------------
+-- Debian 13 ships nvim 0.10; newer releases of some plugins need 0.11+, so pin those on older nvim
+local old_nvim = vim.fn.has("nvim-0.11") == 0
+local pin = function(tag) return old_nvim and tag or nil end
 
-  -- Catppuccin
+require("lazy").setup({
+  { "nvim-tree/nvim-web-devicons", lazy = true },   -- file icons (needs a Nerd Font in kitty)
+
+  -- colours: catppuccin engine, nss palette
   {
     "catppuccin/nvim",
     name = "catppuccin",
-    priority = 1000,
+    tag = pin("v1.11.0"),
+    priority = 1000,                                -- load before everything else
     config = function()
       require("catppuccin").setup({
         flavour = "mocha",
-        transparent_background = true,
+        transparent_background = false,
         term_colors = true,
+        color_overrides = {
+          mocha = {                                 -- catppuccin roles mapped onto nss
+            base = nss.bg, mantle = "#05080B", crust = "#030507",
+            surface0 = nss.surface, surface1 = nss.surface2, surface2 = nss.line,
+            overlay0 = "#3A4A50", overlay1 = nss.faint, overlay2 = nss.muted,
+            subtext0 = nss.muted, subtext1 = "#B5C0C1", text = nss.fg,
+            mauve = nss.ink,                        -- keywords
+            blue = nss.peri, lavender = nss.peri,   -- functions
+            green = nss.mint,                       -- strings
+            peach = nss.amber,                      -- numbers, constants
+            yellow = "#F2C46B",                     -- types
+            teal = nss.ink, sky = "#7FD6E0", sapphire = "#7FB3F0",
+            red = nss.red, maroon = "#E58A8A", pink = "#C9B8FF",
+            flamingo = "#E6C9C9", rosewater = nss.fg,
+          },
+        },
+        custom_highlights = function()
+          return {
+            Comment = { fg = nss.faint, italic = true },
+            Keyword = { fg = nss.ink, italic = true },
+            CursorLine = { bg = "#0C1317" },
+            Visual = { bg = "#16302E" },
+            LineNr = { fg = "#2A3A3F" },
+            CursorLineNr = { fg = nss.ink, bold = true },
+            WinSeparator = { fg = nss.line },
+            FloatBorder = { fg = nss.line, bg = nss.surface },
+            NormalFloat = { bg = nss.surface },
+            Pmenu = { bg = nss.surface, fg = nss.fg },
+            PmenuSel = { bg = nss.surface2, fg = nss.ink, bold = true },
+            NvimTreeNormal = { bg = nss.bg },
+            NvimTreeEndOfBuffer = { bg = nss.bg },
+            NvimTreeWinSeparator = { fg = nss.line, bg = nss.bg },
+            GitSignsAdd = { fg = nss.green },
+            GitSignsChange = { fg = nss.ink },
+            GitSignsDelete = { fg = nss.red },
+            IblIndent = { fg = "#141D22" },
+          }
+        end,
         integrations = {
-          lualine = true,
-          telescope = true,
           gitsigns = true,
           nvimtree = true,
+          telescope = { enabled = true },
           treesitter = true,
-        },
-        highlight_overrides = {
-          mocha = function(cp)
-            -- Use your palette to override the default catppuccin values
-            return {
-              Normal = { bg = palette.bg, fg = palette.fg },
-              NormalFloat = { bg = palette.bg },
-              CursorLine = { bg = "#050505" },
-              ColorColumn = { bg = "#070707" },
-              Visual = { bg = "#0f2322" },
-
-              -- syntax accents
-              Keyword = { fg = palette.teal, italic = true },
-              Function = { fg = palette.teal_bright, bold = true },
-              Identifier = { fg = palette.fg },
-              String = { fg = "#7fd6c7" },
-              Number = { fg = "#7bd1c1" },
-              Type = { fg = palette.dim_teal },
-
-              Comment = { fg = palette.comment, italic = true },
-
-              -- UI pieces
-              LineNr = { fg = "#08383a", bg = palette.bg },
-              CursorLineNr = { fg = palette.cursor, bg = palette.bg, bold = true },
-
-              Pmenu = { bg = "#070707", fg = palette.fg },
-              PmenuSel = { bg = "#0a0a0a", fg = palette.fg },
-
-              TelescopePromptNormal = { bg = palette.bg },
-              TelescopeResultsNormal = { bg = palette.bg },
-              TelescopePreviewNormal = { bg = palette.bg },
-
-              -- tree & bufferline
-              NvimTreeNormal = { bg = palette.bg },
-              NvimTreeEndOfBuffer = { bg = palette.bg },
-
-              BufferLineBufferSelected = { fg = palette.fg, bg = "#050505", bold = true },
-              BufferLineBuffer = { fg = "#6b7a78", bg = palette.bg },
-            }
-          end,
+          indent_blankline = { enabled = true },
         },
       })
-      vim.cmd("colorscheme catppuccin")
-      -- enforce true black background (in case terminal/compositor forces gray)
-      vim.api.nvim_set_hl(0, "Normal", { bg = palette.bg })
-      vim.api.nvim_set_hl(0, "NormalFloat", { bg = palette.bg })
-    end
+      vim.cmd.colorscheme("catppuccin")
+    end,
   },
 
-  -- nvim-tree
+  -- file tree
   {
     "nvim-tree/nvim-tree.lua",
+    tag = pin("v1.18.0"),
     dependencies = { "nvim-tree/nvim-web-devicons" },
-    config = function()
-      require("nvim-tree").setup({
-        view = { width = 30 },
-        renderer = { icons = { show = { git = false } } },
-        filters = { dotfiles = false },
-        respect_buf_cwd = true,
-        update_focused_file = { enable = true, update_cwd = false },
-        sync_root_with_cwd = true,
-      })
-      vim.api.nvim_set_hl(0, "NvimTreeNormal", { bg = palette.bg })
-      vim.api.nvim_set_hl(0, "NvimTreeEndOfBuffer", { bg = palette.bg })
-    end,
+    opts = {
+      view = { width = 30 },
+      renderer = { icons = { show = { git = false } } },
+      filters = { dotfiles = false },
+      respect_buf_cwd = true,
+      sync_root_with_cwd = true,
+      update_focused_file = { enable = true, update_root = false },
+    },
   },
 
-  -- true-zen
+  -- distraction-free mode
   {
     "pocco81/true-zen.nvim",
-    config = function()
-      require("true-zen").setup({
-        modes = { ataraxis = { margin = 1 } },
-        integrations = { lualine = true, tmux = true },
-      })
-    end,
+    opts = {
+      modes = { ataraxis = { margin = 1 } },     -- unchanged from your config
+      integrations = { lualine = true, tmux = true },
+    },
   },
 
-  -- treesitter
+  -- syntax via tree-sitter (pinned to master: the new main branch has a different API)
   {
     "nvim-treesitter/nvim-treesitter",
+    branch = "master",
     build = ":TSUpdate",
-    config = function()
-      require("nvim-treesitter.configs").setup({
-        ensure_installed = { "lua", "vim", "vimdoc", "bash", "json", "css", "html", "javascript" },
-        highlight = { enable = true },
-        indent = { enable = true },
-      })
-    end
+    main = "nvim-treesitter.configs",
+    opts = {
+      ensure_installed = { "lua", "vim", "vimdoc", "bash", "json", "css", "html", "javascript",
+        "python", "go", "yaml", "markdown", "markdown_inline", "haskell", "sql" },
+      highlight = { enable = true },
+      indent = { enable = true },
+    },
   },
 
-  -- css color previews (keeps your plugin)
-  { "ap/vim-css-color" },
+  { "ap/vim-css-color" },                             -- colour previews for #hex values
 
-  -- lualine
+  -- statusline in nss colours
   {
     "nvim-lualine/lualine.nvim",
-    dependencies = { "nvim-tree/nvim-web-devicons", "catppuccin" },
-    config = function()
-      local theme = require("lualine.themes.catppuccin") or {}
-      theme.normal = theme.normal or {}
-      theme.normal.c = theme.normal.c or {}
-      theme.normal.c.bg = "#050505"
-      theme.insert = theme.insert or {}
-      theme.insert.c = theme.insert.c or {}
-      theme.insert.c.bg = "#003b37"
-      theme.visual = theme.visual or {}
-      theme.visual.c = theme.visual.c or {}
-      theme.visual.c.bg = "#064b45"
-      require("lualine").setup({
-        options = {
-          theme = theme,
-          section_separators = "", component_separators = "",
-          globalstatus = true,
+    dependencies = { "nvim-tree/nvim-web-devicons" },
+    opts = function()
+      local mode = function(col) return { a = { fg = nss.bg, bg = col, gui = "bold" } } end
+      local theme = {
+        normal = {
+          a = { fg = nss.bg, bg = nss.ink, gui = "bold" },
+          b = { fg = nss.fg, bg = nss.surface2 },
+          c = { fg = nss.muted, bg = nss.surface },
         },
+        insert = mode(nss.peri),
+        visual = mode(nss.amber),
+        replace = mode(nss.red),
+        command = mode(nss.mint),
+        inactive = { c = { fg = nss.faint, bg = nss.bg } },
+      }
+      return {
+        options = { theme = theme, section_separators = "", component_separators = "", globalstatus = true },
         sections = {
           lualine_a = { { "mode", padding = { left = 1, right = 1 } } },
           lualine_b = { "branch" },
@@ -230,151 +231,146 @@ require("lazy").setup({
           lualine_y = { "progress" },
           lualine_z = { "location" },
         },
-      })
+      }
     end,
   },
 
-  -- bufferline
+  -- buffer tabs
   {
     "akinsho/bufferline.nvim",
     version = "*",
-    dependencies = "nvim-tree/nvim-web-devicons",
-    config = function()
-      require("bufferline").setup({
-        options = {
-          diagnostics = "nvim_lsp",
-          offsets = { { filetype = "NvimTree", text = "", padding = 1 } },
-          show_buffer_close_icons = false,
-          show_close_icon = false,
-          always_show_bufferline = true,
-          separator_style = "thin",
-        },
-        highlights = {
-          background = { guibg = palette.bg },
-        }
-      })
-    end,
+    dependencies = { "nvim-tree/nvim-web-devicons" },
+    opts = {
+      options = {
+        diagnostics = "nvim_lsp",
+        offsets = { { filetype = "NvimTree", text = "", padding = 1 } },
+        show_buffer_close_icons = false,
+        show_close_icon = false,
+        always_show_bufferline = true,
+        separator_style = "thin",
+      },
+      highlights = {
+        fill = { bg = nss.bg },
+        background = { fg = nss.faint, bg = nss.bg },
+        buffer_visible = { fg = nss.muted, bg = nss.bg },
+        buffer_selected = { fg = nss.fg, bg = nss.surface, bold = true, italic = false },
+        separator = { fg = nss.line, bg = nss.bg },
+        separator_selected = { fg = nss.line, bg = nss.surface },
+        indicator_selected = { fg = nss.teal, bg = nss.surface },
+      },
+    },
   },
 
-  -- telescope
+  -- fuzzy finder
   {
     "nvim-telescope/telescope.nvim",
+    tag = pin("0.1.8"),
     dependencies = { "nvim-lua/plenary.nvim", "nvim-tree/nvim-web-devicons" },
-    config = function()
+    cmd = "Telescope",
+    keys = {
+      { "<leader>ff", "<cmd>Telescope find_files<cr>", desc = "Find files" },
+      { "<leader>fg", "<cmd>Telescope live_grep<cr>", desc = "Live grep" },
+      { "<leader>fb", "<cmd>Telescope buffers<cr>", desc = "Buffers" },
+    },
+    opts = function()
       local actions = require("telescope.actions")
-      require("telescope").setup({
+      return {
         defaults = {
           prompt_prefix = "❯ ",
           selection_caret = "➡ ",
           sorting_strategy = "ascending",
-          layout_config = { width = 0.8, height = 0.6 },
-          mappings = { i = { ["<esc>"] = actions.close } },
+          layout_config = { width = 0.8, height = 0.6, prompt_position = "top" },
+          mappings = { i = { ["<esc>"] = actions.close } },  -- one Esc closes
           winblend = 10,
-        }
-      })
-      vim.keymap.set("n", "<leader>ff", require("telescope.builtin").find_files, { desc = "Find files" })
-      vim.keymap.set("n", "<leader>fg", require("telescope.builtin").live_grep, { desc = "Live grep" })
-      vim.keymap.set("n", "<leader>fb", require("telescope.builtin").buffers, { desc = "Buffers" })
+        },
+      }
     end,
   },
 
-  -- indent-blankline v3 (ibl)
+  -- indent guides
   {
     "lukas-reineke/indent-blankline.nvim",
+    tag = pin("v3.9.0"),
     main = "ibl",
-    config = function()
-      require("ibl").setup({
-        indent = { char = "│" },
-        scope = { enabled = false },
-        exclude = {
-          filetypes = { "help", "terminal", "alpha" },
-          buftypes = { "terminal", "nofile" },
-        },
-      })
-    end,
+    opts = {
+      indent = { char = "│" },
+      scope = { enabled = false },
+      exclude = { filetypes = { "help", "terminal", "alpha" }, buftypes = { "terminal", "nofile" } },
+    },
   },
 
-  -- gitsigns
+  -- git signs in the gutter
   {
     "lewis6991/gitsigns.nvim",
-    config = function()
-      require("gitsigns").setup({
-        current_line_blame = false,
-        numhl = false,
-        signs = {
-          add = { text = "│" },
-          change = { text = "│" },
-          delete = { text = "_" },
-          topdelete = { text = "‾" },
-          changedelete = { text = "~" },
-        },
-        on_attach = function(bufnr)
-          -- optionally tune highlight groups to teal
-          vim.api.nvim_set_hl(0, "GitSignsAdd", { fg = palette.teal })
-          vim.api.nvim_set_hl(0, "GitSignsChange", { fg = palette.selection })
-          vim.api.nvim_set_hl(0, "GitSignsDelete", { fg = "#704040" })
-        end,
-      })
-    end
+    tag = pin("v1.0.2"),
+    opts = {
+      current_line_blame = false,
+      numhl = false,
+      signs = {
+        add = { text = "│" },
+        change = { text = "│" },
+        delete = { text = "_" },
+        topdelete = { text = "‾" },
+        changedelete = { text = "~" },
+      },
+    },
   },
+}, {
+  install = { colorscheme = { "catppuccin" } },     -- theme used while plugins install on first run
+  change_detection = { notify = false },            -- reload silently when this file changes
 })
 
------------------------------------------------------------
--- Keymaps (existing ones preserved)
------------------------------------------------------------
--- NvimTree Toggle
-vim.keymap.set("n", "<C-n>", ":NvimTreeToggle<CR>")
+-----------------------------------------------------------------------
+-- Keymaps
+-----------------------------------------------------------------------
+local map = function(mode, lhs, rhs, desc) vim.keymap.set(mode, lhs, rhs, { silent = true, desc = desc }) end
 
--- TrueZen
-vim.keymap.set("n", "<leader>g", ":TZMinimalist<CR>")
+map("n", "<C-n>", "<cmd>NvimTreeToggle<cr>", "File tree")
+map("n", "<leader>g", "<cmd>TZMinimalist<cr>", "Zen mode")
 
--- Telescope
-vim.keymap.set("n", "<leader>ff", "<cmd>Telescope find_files<cr>")
-vim.keymap.set("n", "<leader>fg", "<cmd>Telescope live_grep<cr>")
+map("i", "jk", "<Esc>", "Leave insert mode")
+map("n", "<leader>w", "<cmd>w!<cr>", "Save")
+map("n", "<leader>l", "<cmd>bn!<cr>", "Next buffer")
+map("n", "<leader>o", "<cmd>tabnew<cr>", "New tab")
+map("n", "<leader>y", 'ggVG"+y', "Copy whole file")
+map("n", "<leader>r", 'ggVGd"+P', "Replace file with clipboard")
+map("n", "<leader>sh", "<cmd>terminal<cr>", "Terminal")
+map("n", "<Esc>", "<cmd>nohlsearch<cr>", "Clear search highlight")
 
--- General
-vim.keymap.set("i", "jk", "<Esc>")
-vim.keymap.set("n", "<leader>w", ":w!<CR>")
-vim.keymap.set("n", "<leader>l", ":bn!<CR>")
-vim.keymap.set("n", "<leader>o", ":tabnew<CR>")
-vim.keymap.set("n", "<leader>y", "ggVG\"+y")
-vim.keymap.set("n", "<leader>r", "ggVGd\"+P")
-vim.keymap.set("n", "<leader>sh", ":terminal<CR>")
+map("n", "<leader>h", "<cmd>split<cr>", "Split below")
+map("n", "<leader>v", "<cmd>vsplit<cr>", "Split right")
+map("n", "<C-h>", "<C-w>h", "Window left")
+map("n", "<C-j>", "<C-w>j", "Window down")
+map("n", "<C-k>", "<C-w>k", "Window up")
+map("n", "<C-l>", "<C-w>l", "Window right")
 
--- Splits and navigation
-vim.keymap.set("n", "<leader>h", ":split<CR>")
-vim.keymap.set("n", "<leader>v", ":vsplit<CR>")
-vim.keymap.set("n", "<C-h>", "<C-w>h")
-vim.keymap.set("n", "<C-j>", "<C-w>j")
-vim.keymap.set("n", "<C-k>", "<C-w>k")
-vim.keymap.set("n", "<C-l>", "<C-w>l")
+map("n", "<C-Left>", "<cmd>vertical resize +3<cr>", "Wider")
+map("n", "<C-Right>", "<cmd>vertical resize -3<cr>", "Narrower")
+map("n", "<C-Up>", "<cmd>resize +3<cr>", "Taller")
+map("n", "<C-Down>", "<cmd>resize -3<cr>", "Shorter")
 
--- Resize
-vim.keymap.set("n", "<C-Left>",  ":vertical resize +3<CR>")
-vim.keymap.set("n", "<C-Right>", ":vertical resize -3<CR>")
-vim.keymap.set("n", "<C-Up>",    ":resize +3<CR>")
-vim.keymap.set("n", "<C-Down>",  ":resize -3<CR>")
+-----------------------------------------------------------------------
+-- Autocommands
+-----------------------------------------------------------------------
+vim.api.nvim_create_autocmd("TextYankPost", {      -- flash the yanked text
+  group = vim.api.nvim_create_augroup("naos_yank", { clear = true }),
+  callback = function() vim.highlight.on_yank({ timeout = 150 }) end,
+})
 
------------------------------------------------------------
--- Cache / swap / undo dirs
------------------------------------------------------------
-local cache = vim.fn.stdpath("cache")
-vim.opt.directory = cache .. "/swap//"
-vim.opt.backupdir = cache .. "/backup//"
-vim.opt.undodir = cache .. "/undo//"
-vim.opt.undofile = true
-
------------------------------------------------------------
--- Headerize Command (unchanged)
------------------------------------------------------------
+-----------------------------------------------------------------------
+-- :Headerize — adds the narch header to the current file
+-----------------------------------------------------------------------
 vim.api.nvim_create_user_command("Headerize", function()
   local file = vim.fn.expand("%:p")
-  os.execute("python3 ~/data/workspace/narch/headerize.py " .. file)
-  vim.cmd("edit!")
-end, {})
-
--- final tweaks: force teal-ish cursorline/visual and cursorline number
-vim.api.nvim_set_hl(0, "CursorLine", { bg = "#050505" })
-vim.api.nvim_set_hl(0, "Visual", { bg = "#0f2322" })
-vim.api.nvim_set_hl(0, "CursorLineNr", { fg = palette.cursor, bold = true })
-
+  if file == "" then
+    vim.notify("Headerize: this buffer has no file", vim.log.levels.WARN)
+    return
+  end
+  vim.cmd("write")                                 -- save first so unsaved edits aren't lost on reload
+  local out = vim.fn.system({ "python3", vim.fn.expand("~/data/workspace/narch/headerize.py"), file })
+  if vim.v.shell_error ~= 0 then
+    vim.notify("Headerize failed:\n" .. out, vim.log.levels.ERROR)
+    return
+  end
+  vim.cmd("edit!")                                 -- reload with the new header
+end, { desc = "Add the narch header to this file" })

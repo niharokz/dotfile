@@ -1,5 +1,5 @@
 #!/bin/bash
- 
+
 #
 #       ███╗   ██╗██╗██╗  ██╗ █████╗ ██████╗ ███████╗
 #       ████╗  ██║██║██║  ██║██╔══██╗██╔══██╗██╔════╝
@@ -8,47 +8,60 @@
 #       ██║ ╚████║██║██║  ██║██║  ██║██║  ██║███████║
 #       ╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝╚══════╝
 #       DRAFTED BY [https://nih.ar] ON 23-06-2021
-#       SOURCE [xinitrc] LAST MODIFIED ON 04-05-2026
+#       SOURCE [xinitrc] LAST MODIFIED ON 03-11-2026
+#       naos-l · started by `startx` from ~/.config/zsh/.zshrc on tty1
 #
+
+### ────────────────────────────
+### ⚙️ Options
+
+NAOS_LOCK_ON_START=0                       # 1 = show the lock screen right after boot (acts as the login screen)
 
 ### ────────────────────────────
 ### 🧠 System Init
 
+# distro hooks (dbus, ssh-agent, ...)
 if [ -d /etc/X11/xinit/xinitrc.d ]; then
   for f in /etc/X11/xinit/xinitrc.d/?*.sh; do
+    # shellcheck disable=SC1090  # sourcing distro hook files by design
     [ -x "$f" ] && . "$f"
   done
   unset f
 fi
 
 unset GREP_OPTIONS
-
+export PATH="$HOME/.local/bin:$PATH"       # naos-lock and the xmobar helper scripts
 
 ### ────────────────────────────
 ### 🖥️ Display / Monitor Setup
 
 if command -v xrandr >/dev/null 2>&1 && [ -n "$DISPLAY" ]; then
-
   XR="$(xrandr)"
 
-  ### Dual Monitor: DP-1 (LEFT) + eDP-1 (RIGHT)
   if echo "$XR" | grep -q '^DP-1 connected' && echo "$XR" | grep -q '^eDP-1 connected'; then
-
+    # docked: 4K monitor (DP-1) on the left at 0.8 scale, laptop (eDP-1) on the right
     xrandr \
       --output DP-1  --mode 3840x2160 --scale 0.8x0.8 --pos 0x0 --filter nearest \
       --output eDP-1 --primary --mode 1920x1080 --scale 1x1 --right-of DP-1
-
-  ### Fallback: Laptop Only
   elif echo "$XR" | grep -q '^eDP-1 connected'; then
-
+    # laptop screen only
     xrandr --output eDP-1 --auto --primary
-
   fi
-
 fi
 
 ### ────────────────────────────
+### 🔒 Lock screen
+
+# lock when the lid closes or the machine suspends
+command -v xss-lock >/dev/null 2>&1 && xss-lock --transfer-sleep-lock -- naos-lock &
+
+# lock once at startup; xmonad loads behind it
+[ "$NAOS_LOCK_ON_START" = 1 ] && command -v naos-lock >/dev/null 2>&1 && naos-lock &
+
+### ────────────────────────────
 ### 🪂 Syncthing
+
+# start unless the user service (systemctl --user enable syncthing) already runs it
 pgrep -x syncthing >/dev/null || syncthing --no-browser --logflags=0 >/dev/null 2>&1 &
 
 ### ────────────────────────────

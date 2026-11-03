@@ -1,0 +1,49 @@
+-- naos · xmobarrc · nss theme
+-- Started by xmonad (withEasySB). Helper scripts live in ~/.local/bin (naos-volume, naos-net, naos-wifi, naos-battery, nimory-status).
+-- The naos mark on the left is ~/.local/share/naos/icons/naos-bar.xpm; clicking it opens the launcher.
+-- Colours: bg #070B0F  line #1F2C33  teal #3A807A  ink #66BDB3  fg #E6ECEC  muted #8B979A  faint #5C6B6A
+
+Config
+  { font            = "JetBrains Mono Bold 10"                    -- default text
+  , additionalFonts = [ "Noto Color Emoji 10"                      -- <fn=1>: workspace emoji
+                      , "JetBrains Mono 10"                        -- <fn=2>: regular weight
+                      ]
+  , bgColor         = "#070B0F"
+  , fgColor         = "#E6ECEC"
+  , alpha           = 255                                          -- solid, so the logo icon blends in
+  , position        = TopSize L 100 32                             -- full width, 32 px tall
+  , border          = BottomB                                      -- hairline under the bar
+  , borderColor     = "#1F2C33"
+  , lowerOnStart    = True
+  , hideOnStart     = False
+  , allDesktops     = True
+  , persistent      = True
+  , overrideRedirect = False                                       -- lets xmonad reserve space for the bar
+  , iconRoot        = "/home/nihar/.local/share/naos/icons"         -- where <icon=...> files are looked up
+  , iconOffset      = -1                                           -- centre icons vertically
+
+  , commands =
+      [ Run UnsafeXMonadLog                                        -- workspaces + title (allows click actions)
+
+      , Run Com "nimory-status" [] "nimory" 300                    -- homelab over Tailscale: left click ssh, right click dashboard
+
+      , Run Cpu    [ "-t", "<fc=#5C6B6A>cpu</fc> <total>%"
+                   , "-L", "30", "-H", "70"
+                   , "--normal", "#E0A63A", "--high", "#FF6B6B"    -- amber above 30 %, red above 70 %
+                   ] 20
+
+      , Run Memory [ "-t", "<fc=#5C6B6A>mem</fc> <used>M" ] 20
+
+      , Run Com "naos-volume" [] "volume" 10                       -- click: mute, scroll: volume
+      , Run Com "naos-net"    [] "net"    600                      -- data used this month (vnstat), every 60 s
+      , Run Com "naos-wifi"   [] "wifi"   50                       -- network name, click: nmtui
+
+      , Run Com "naos-battery" ["--bar"] "battery" 100           -- turns amber / red as it drains (see ~/.config/naos/battery.conf)
+
+      , Run Date "<fc=#8B979A>%a %d %b</fc>  <fc=#E6ECEC>%H:%M</fc>" "date" 100
+      ]
+
+  , sepChar  = "%"
+  , alignSep = "}{"
+  , template = " <action=`xdotool key super+d` button=1><icon=naos-bar.xpm/></action>  %UnsafeXMonadLog% }{ %nimory%  <fc=#1F2C33>│</fc>  %cpu%  %memory%  <fc=#1F2C33>│</fc>  %volume%  %net%  <fc=#1F2C33>│</fc>  %wifi%  %battery%  <fc=#1F2C33>│</fc>  %date%  "
+  }

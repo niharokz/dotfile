@@ -7,150 +7,132 @@
 #       ██║╚██╗██║██║██╔══██║██╔══██║██╔══██╗╚════██║
 #       ██║ ╚████║██║██║  ██║██║  ██║██║  ██║███████║
 #       ╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═╝╚══════╝
-#       DRAFTED BY [https://nih.ar] ON 30-10-2020.
-#       SOURCE [.zshrc] LAST MODIFIED ON 23-03-2026.
+#       DRAFTED BY [https://nih.ar] ON 30-10-2020
+#       SOURCE [.zshrc] LAST MODIFIED ON 03-11-2026
+#
+#       Interactive shell only. Environment lives in .zprofile, aliases in aliases.zsh.
 #
 
-### ────────────────────────────
-### 🧠 Shell Basics
-
-autoload -U colors && colors
-setopt autocd
-stty stop undef
+[[ -o interactive ]] || return
 
 ### ────────────────────────────
-### 🎨 Prompt (with git)
+### 🧠 Options
+
+setopt autocd                    # type a folder name to cd into it
+setopt interactive_comments      # allow # comments at the prompt
+setopt no_beep
+stty stop undef 2>/dev/null      # free Ctrl+S
+
+### ────────────────────────────
+### 🗂 History (kept in ~/.local/state)
+
+HISTFILE="$XDG_STATE_HOME/zsh/history"
+[[ -d ${HISTFILE:h} ]] || mkdir -p "${HISTFILE:h}"
+HISTSIZE=50000
+SAVEHIST=50000
+setopt share_history             # all open shells see each other's commands
+setopt hist_ignore_all_dups      # keep only the newest copy of a command
+setopt hist_ignore_space         # " cmd" is not saved (handy for secrets)
+setopt hist_reduce_blanks
+setopt extended_history          # store timestamps
+
+### ────────────────────────────
+### 🎨 Prompt (nss colours, git branch on the right)
 
 autoload -Uz vcs_info
-precmd_vcs_info() { vcs_info }
-precmd_functions+=( precmd_vcs_info )
-
+precmd_functions+=(vcs_info)
 setopt prompt_subst
-
-PS1="%B%{$fg[red]%}[%{$fg[yellow]%}%n%{$fg[green]%}@%{$fg[blue]%}%M %{$fg[magenta]%}%~%{$fg[red]%}]%{$reset_color%}$%b "
-RPROMPT=\$vcs_info_msg_0_
-
-zstyle ':vcs_info:git:*' formats '%F{30}(%b)%r%f'
 zstyle ':vcs_info:*' enable git
+zstyle ':vcs_info:git:*' formats '%F{#3A807A}(%b)%f'
+zstyle ':vcs_info:git:*' actionformats '%F{#E0A63A}(%b|%a)%f'
+
+# [nihar@naos-l ~/path]$   red $ after a failed command
+PROMPT='%B%F{#1F2C33}[%F{#66BDB3}%n%F{#5C6B6A}@%F{#A9B8FF}%m %F{#E6ECEC}%~%F{#1F2C33}]%(?.%F{#8B979A}.%F{#FF6B6B})$%f%b '
+RPROMPT='${vcs_info_msg_0_}'
 
 ### ────────────────────────────
-### 🗂 History
+### 🔍 Completion (cache kept in ~/.cache)
 
-HISTSIZE=1000
-SAVEHIST=1000
-HISTFILE="$XDG_DATA_HOME/zsh/history"
-
-### ────────────────────────────
-### ⚡ Load Custom Layer (IMPORTANT ORDER)
-
-[[ $- != *i* ]] && return
-
-# Load functions FIRST (uses env like $WORK)
-[ -f "$WORK/narch/shellfunctions.sh" ] && source "$WORK/narch/shellfunctions.sh"
-
-# Then aliases
-[ -f "$XDG_CONFIG_HOME/.alias" ] && source "$XDG_CONFIG_HOME/.alias"
-
-### ────────────────────────────
-### 🖥️ Auto Start X (TTY1)
-
-if [[ -z $DISPLAY ]] && [[ $(tty) = /dev/tty1 ]]; then
-  exec startx "$XDG_CONFIG_HOME/X11/xinitrc"
-fi
-
-### ────────────────────────────
-### 📦 System Profiles
-
-if [ -d /etc/profile.d ]; then
-  for script in /etc/profile.d/*.sh; do
-    [ -r "$script" ] && . "$script"
-  done
-fi
-
-### ────────────────────────────
-### 🔍 Completion
-
-autoload -U compinit
+autoload -Uz compinit
 zmodload zsh/complist
-compinit
-_comp_options+=(globdots)
-
+[[ -d $XDG_CACHE_HOME/zsh ]] || mkdir -p "$XDG_CACHE_HOME/zsh"
+compinit -d "$XDG_CACHE_HOME/zsh/zcompdump-$ZSH_VERSION"
+_comp_options+=(globdots)                                        # complete hidden files too
 zstyle ':completion:*' menu select
-zstyle ':completion:*' matcher-list '' 'm:{a-z}={A-Z}'
+zstyle ':completion:*' matcher-list '' 'm:{a-z}={A-Z}'          # case-insensitive
+zstyle ':completion:*' use-cache on
+zstyle ':completion:*' cache-path "$XDG_CACHE_HOME/zsh/zcompcache"
 eval "$(dircolors -b)"
+zstyle ':completion:*' list-colors "${(s.:.)LS_COLORS}"
 
 ### ────────────────────────────
-### ⌨️ Keybindings (Vim Style)
+### ⌨️ Vim keys
 
 bindkey -v
 export KEYTIMEOUT=1
-
 bindkey -M menuselect 'h' vi-backward-char
 bindkey -M menuselect 'j' vi-down-line-or-history
 bindkey -M menuselect 'k' vi-up-line-or-history
 bindkey -M menuselect 'l' vi-forward-char
 bindkey '^?' backward-delete-char
+bindkey '^[[P' delete-char
 
-### ────────────────────────────
-### 🖱️ Cursor Behavior
-
-zle-keymap-select() {
-  if [[ ${KEYMAP} == vicmd ]]; then
-    echo -ne '\e[1 q'
-  else
-    echo -ne '\e[5 q'
-  fi
-}
+# block cursor in normal mode, beam in insert mode
+zle-keymap-select() { [[ $KEYMAP == vicmd ]] && echo -ne '\e[1 q' || echo -ne '\e[5 q'; }
 zle -N zle-keymap-select
-
-zle-line-init() {
-  zle -K viins
-  echo -ne "\e[5 q"
-}
+zle-line-init() { zle -K viins; echo -ne '\e[5 q'; }
 zle -N zle-line-init
+preexec_functions+=(_naos_beam_cursor)
+_naos_beam_cursor() { echo -ne '\e[5 q'; }
 
-preexec() { echo -ne '\e[5 q'; }
+autoload -Uz edit-command-line
+zle -N edit-command-line
+bindkey '^e' edit-command-line                                   # edit the current line in nvim
 
 ### ────────────────────────────
 ### 📁 Tools
 
+# lf that cds into the last folder you were in
 lfcd() {
+  local tmp dir
   tmp="$(mktemp)"
   lf -last-dir-path="$tmp" "$@"
-  if [ -f "$tmp" ]; then
-    dir="$(cat "$tmp")"
-    rm -f "$tmp"
-    [ -d "$dir" ] && cd "$dir"
+  if [[ -f $tmp ]]; then
+    dir="$(<"$tmp")"; rm -f "$tmp"
+    [[ -d $dir ]] && cd "$dir"
   fi
 }
-
 bindkey -s '^o' 'lfcd\n'
-bindkey -s '^a' 'bc -l\n'
+bindkey -s '^a' 'bc -lq\n'
 bindkey -s '^f' 'cd "$(dirname "$(fzf)")"\n'
-bindkey '^[[P' delete-char
-
-autoload edit-command-line
-zle -N edit-command-line
-bindkey '^e' edit-command-line
 
 ### ────────────────────────────
-### 🔌 Plugins
+### 🧩 Functions and aliases
 
-source /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh 2>/dev/null
-source /usr/share/zsh/plugins/zsh-you-should-use/you-should-use.plugin.zsh 2>/dev/null
-source /usr/share/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh 2>/dev/null
-source /usr/share/zsh/plugins/zsh-history-substring-search/zsh-history-substring-search.zsh 2>/dev/null
+[[ -f $WORK/narch/shellfunctions.sh ]] && source "$WORK/narch/shellfunctions.sh"
+[[ -f $ZDOTDIR/aliases.zsh ]] && source "$ZDOTDIR/aliases.zsh"
 
-### ────────────────────────────
-### 🛠 Dev Environment
-
-export GOPATH="$HOME/go"
-export GOCACHE="$XDG_CACHE_HOME/go-build"
-export PATH="$PATH:$GOPATH/bin"
-
-export GPG_TTY="$(tty)"
+export GPG_TTY="$TTY"                                            # pinentry needs the current tty
 
 ### ────────────────────────────
-### ⚡ Startup
+### 🔌 Plugins (Debian and Arch install them in different places)
 
-macchina
+_naos_plugin() {  # _naos_plugin <name> <file>: source the first copy found
+  local dir
+  for dir in /usr/share/zsh/plugins/$1 /usr/share/$1 $XDG_DATA_HOME/zsh/plugins/$1; do
+    [[ -r $dir/$2 ]] && { source "$dir/$2"; return 0; }
+  done
+  return 1
+}
+ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=#5C6B6A'
+_naos_plugin zsh-autosuggestions zsh-autosuggestions.zsh
+_naos_plugin zsh-you-should-use you-should-use.plugin.zsh
+_naos_plugin zsh-history-substring-search zsh-history-substring-search.zsh \
+  && { bindkey -M vicmd 'k' history-substring-search-up; bindkey -M vicmd 'j' history-substring-search-down; }
+_naos_plugin zsh-syntax-highlighting zsh-syntax-highlighting.zsh  # must be last
+unfunction _naos_plugin
+
+### ────────────────────────────
+### ⚡ Greeting
+
+[[ -x $WORK/narch/niharfetch.sh && -z $NVIM ]] && "$WORK/narch/niharfetch.sh" --quick
